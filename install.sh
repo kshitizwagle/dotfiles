@@ -38,7 +38,12 @@ while IFS= read -r f; do link "${f#./}"; done < <(find ./.local/share -type f | 
 # Per-host Hyprland settings (monitors, GPU order)
 HOSTDIR="$REPO/hosts/$HOST"
 if [ -d "$HOSTDIR" ]; then
-  run sh -c "sed 's|__HOME__|$HOME|g' '$HOSTDIR/hypr-host.conf' > '$HOME/.config/hypr/host.conf'"
+  # Hyprland watches host.conf and reloads on every write. Truncate-then-write made it reload on
+  # an *empty* file (no monitor lines -> 60 Hz modeset, no workspace rules), so: write a temp file,
+  # skip if unchanged, else swap it in atomically.
+  run sh -c "sed 's|__HOME__|$HOME|g' '$HOSTDIR/hypr-host.conf' > '$HOME/.config/hypr/host.conf.new' && \
+    if cmp -s '$HOME/.config/hypr/host.conf.new' '$HOME/.config/hypr/host.conf'; then rm '$HOME/.config/hypr/host.conf.new'; \
+    else mv '$HOME/.config/hypr/host.conf.new' '$HOME/.config/hypr/host.conf'; fi"
   if [ -f "$HOSTDIR/gpus" ]; then
     while IFS='=' read -r name dev; do
       [ -n "$name" ] && run ln -sfn "$dev" "$HOME/.config/hypr/$name"
@@ -46,7 +51,7 @@ if [ -d "$HOSTDIR" ]; then
   fi
   echo "host     $HOST: wrote ~/.config/hypr/host.conf"
 else
-  run sh -c "printf 'monitor = , preferred, auto, 1\n' > '$HOME/.config/hypr/host.conf'"
+  run sh -c "printf 'monitor = , preferred, auto, 1\n' > '$HOME/.config/hypr/host.conf.new' && mv '$HOME/.config/hypr/host.conf.new' '$HOME/.config/hypr/host.conf'"
   echo "host     $HOST: no hosts/$HOST, wrote generic host.conf (add one, see AGENTS.md)"
 fi
 
