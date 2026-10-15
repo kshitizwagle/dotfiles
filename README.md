@@ -24,6 +24,7 @@ calendar's day under each date, previous/next month, Today, and Saturdays (Nepal
 ## Launcher
 
 **vicinae** (Alt+Space) in the Aura theme; Super+Alt+V shows clipboard history in the same window.
+Update with `scripts/update-vicinae.sh` — it runs the official installer when a new release is out and restarts the daemon.
 
 ![Launcher](docs/screenshots/launcher.jpg)
 
@@ -104,6 +105,8 @@ Run `./install.sh --dry-run` first to see what it will do.
 
 Titlebar buttons: red closes regular apps, yellow minimizes, and green gives the window its own workspace (press again to return).
 For Spotify, red parks it in the minimized stash so playback continues in the background.
+Minimizing shows a "Minimized to stash" notification — click it to bring the window straight back.
+The stash pill in the top bar shows how many windows are minimized: left-click picks one, middle-click restores the newest, right-click restores all (it hides itself while the stash is empty).
 
 **Ghostty**
 | Key | Action |
