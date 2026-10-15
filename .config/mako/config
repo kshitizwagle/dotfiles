@@ -21,6 +21,10 @@ format=<b>%s</b>\n<span color="#908f98">%b</span>
 [app-name="Spotify"]
 border-color=#61ffca
 
+[app-name="Stash"]
+border-color=#a277ff
+default-timeout=10000
+
 [urgency=low]
 text-color=#bdbdbd
 

@@ -4,7 +4,7 @@
 if [ -n "${1:-}" ]; then addr=$1; else addr=$(~/.config/hypr/scripts/bar-window.sh); fi
 [ -n "$addr" ] || exit 0
 
-client=$(hyprctl clients -j | jq -c --arg a "$addr" '.[] | select(.address == $a) | {workspace: .workspace.name}')
+client=$(hyprctl clients -j | jq -c --arg a "$addr" '.[] | select(.address == $a) | {workspace: .workspace.name, title: .title, class: .class}')
 [ -n "$client" ] || exit 0
 workspace=$(jq -r '.workspace // ""' <<<"$client")
 
@@ -13,6 +13,12 @@ workspace=$(jq -r '.workspace // ""' <<<"$client")
 if [ "$workspace" != "special:minimized" ]; then
   hyprctl dispatch movetoworkspacesilent "special:minimized,address:$addr" >/dev/null
 fi
+
+# Undo affordance: the toast's default action (left-click in mako, `makoctl invoke`)
+# hands the window back. notify-undo.py runs detached while the overlay bookkeeping below
+# continues.
+label=$(jq -r '.title // ""' <<<"$client"); [ -n "$label" ] || label=$(jq -r '.class // "window"' <<<"$client")
+~/.config/hypr/scripts/notify-undo.py "$addr" "$label" >/dev/null 2>&1 &
 
 monitors=$(hyprctl monitors -j)
 overlay_monitor=$(jq -r '[.[] | select(.specialWorkspace.name == "special:minimized") | .id][0] // empty | tostring' <<<"$monitors")
