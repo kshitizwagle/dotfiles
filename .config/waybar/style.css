@@ -112,6 +112,10 @@ window#waybar.dock #custom-spotify.minimized {
   border-color: #908f98;
 }
 
+/* Stash pill (top bar): hidden while the stash is empty, purple while windows are parked */
+#custom-stash { padding: 0 10px; color: #a277ff; font-size: 15px; }
+#custom-stash:hover { background: #3d375e; }
+
 /* Dashboard launcher (top-left) */
 #custom-dashboard { padding: 0 14px 0 6px; color: #a277ff; font-size: 15px; }
 #custom-dashboard:hover { background: #3d375e; }

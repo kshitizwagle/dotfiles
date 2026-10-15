@@ -1,6 +1,7 @@
 //! aura-bar: event-driven Waybar helpers for Hyprland (replaces per-second shell polling).
 //!
 //!   aura-bar dock <glyph> <class>[,<class>…] <name>   long-running; reprints on Hyprland window events
+//!   aura-bar stash                             long-running; the minimized-stash pill (empty text when none)
 //!   aura-bar clock                             long-running; reprints on each minute boundary
 //!   aura-bar dnd                               prints once (Waybar re-runs it on SIGRTMIN+8)
 //!   aura-bar bsdate                            today's Bikram Sambat date, e.g. "२९ असोज २०८३"
@@ -103,10 +104,9 @@ fn relevant(event: &str) -> bool {
     matches!(name, "openwindow" | "closewindow" | "movewindow" | "movewindowv2" | "activewindowv2" | "monitoradded" | "monitorremoved")
 }
 
-fn dock(glyph: &str, classes: &str, name: &str) {
-    let classes: Vec<String> = classes.split(',').map(String::from).collect();
-    // Waybar tells each module instance which output (monitor) its bar is on
-    let output = std::env::var("WAYBAR_OUTPUT_NAME").unwrap_or_default();
+/// Reconnecting event loop shared by the long-running modules: emit `status()` whenever it
+/// changes, and resample after every (re)connect so an indicator can never go stale.
+fn watch<F: FnMut() -> Value>(mut status: F) {
     let mut last: Option<Value> = None;
     loop {
         let Ok(stream) = UnixStream::connect(format!("{}/.socket2.sock", hypr_dir())) else {
@@ -114,7 +114,7 @@ fn dock(glyph: &str, classes: &str, name: &str) {
             // Once connected, the next snapshot is taken after subscription and closes
             // any gap between this fallback snapshot and the event stream.
             if last.is_none() {
-                let now = dock_status(glyph, name, &classes, &output);
+                let now = status();
                 emit(&now);
                 last = Some(now);
             }
@@ -124,7 +124,7 @@ fn dock(glyph: &str, classes: &str, name: &str) {
         // Subscribe first, then sample current state. Events that arrive during the
         // queries remain queued on this stream and will trigger another refresh below.
         let reader = BufReader::new(stream);
-        let now = dock_status(glyph, name, &classes, &output);
+        let now = status();
         if last.as_ref() != Some(&now) {
             emit(&now);
             last = Some(now);
@@ -135,7 +135,7 @@ fn dock(glyph: &str, classes: &str, name: &str) {
             }
             // windows can be mid-teardown when the event fires; settle briefly before reading
             std::thread::sleep(Duration::from_millis(60));
-            let now = dock_status(glyph, name, &classes, &output);
+            let now = status();
             if last.as_ref() != Some(&now) {
                 emit(&now);
                 last = Some(now);
@@ -143,6 +143,37 @@ fn dock(glyph: &str, classes: &str, name: &str) {
         }
         std::thread::sleep(Duration::from_secs(1)); // Hyprland restarted: reconnect
     }
+}
+
+fn dock(glyph: &str, classes: &str, name: &str) {
+    let classes: Vec<String> = classes.split(',').map(String::from).collect();
+    // Waybar tells each module instance which output (monitor) its bar is on
+    let output = std::env::var("WAYBAR_OUTPUT_NAME").unwrap_or_default();
+    watch(|| dock_status(glyph, name, &classes, &output));
+}
+
+// ---------------- stash ----------------
+
+/// One pill for the whole session's minimized windows. The dock badges only tell per app and
+/// per monitor; this is the canonical "stash" teller. Empty text hides the pill in Waybar.
+fn stash_status() -> Value {
+    let count = hypr_json("clients")
+        .as_array()
+        .map(|cs| cs.iter().filter(|c| c["workspace"]["name"].as_str() == Some("special:minimized")).count())
+        .unwrap_or(0);
+    if count == 0 {
+        json!({"text": "", "class": "empty"})
+    } else {
+        json!({
+            "text": format!("󰖰 {count}"),
+            "class": "stashed",
+            "tooltip": format!("{count} minimized window(s) — click to pick · middle-click restores newest · right-click restores all")
+        })
+    }
+}
+
+fn stash() {
+    watch(stash_status);
 }
 
 // ---------------- dates (local time via libc; Bikram Sambat from an embedded table) ----------------
@@ -273,6 +304,7 @@ fn main() {
     let args: Vec<String> = std::env::args().skip(1).collect();
     match args.first().map(String::as_str) {
         Some("dock") if args.len() == 4 => dock(&args[1], &args[2], &args[3]),
+        Some("stash") => stash(),
         Some("clock") => clock(),
         Some("dnd") => dnd(),
         Some("bsdate") => println!("{}", bs_today()),
@@ -294,7 +326,7 @@ fn main() {
         }
         Some("lockdate") => println!("{}  ·  {}  ·  {}", strftime(&local_tm(), "%-d %B"), strftime(&local_tm(), "%A"), bs_today()),
         _ => {
-            eprintln!("usage: aura-bar dock <glyph> <class[,class…]> <name> | clock | dnd | bsdate | lockdate");
+            eprintln!("usage: aura-bar dock <glyph> <class[,class…]> <name> | stash | clock | dnd | bsdate | lockdate");
             std::process::exit(2);
         }
     }
