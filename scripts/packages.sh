@@ -6,7 +6,7 @@ sudo apt update
 sudo apt install -y \
   fonts-ibm-plex starship neovim papirus-icon-theme \
   hyprland xdg-desktop-portal-hyprland hyprpolkitagent hyprlock hypridle hyprpaper \
-  waybar fuzzel sway-notification-center grim slurp wl-clipboard cliphist \
+  waybar fuzzel sway-notification-center grim slurp wl-clipboard cliphist jq curl \
   qt6ct nwg-look hyprland-qtutils \
   pavucontrol network-manager-gnome blueman
 

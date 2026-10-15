@@ -31,7 +31,7 @@ run mkdir -p "$HOME/.ssh"; run chmod 700 "$HOME/.ssh"
 [ -f "$REPO/.ssh/config" ] || run cp "$REPO/.ssh/config.example" "$REPO/.ssh/config"
 run chmod 600 "$REPO/.ssh/config"   # ssh refuses group-writable configs; git doesn't keep modes
 link .ssh/config
-while IFS= read -r f; do link "${f#./}"; done < <(find ./.config -type f | sort)
+while IFS= read -r f; do link "${f#./}"; done < <(find ./.config -path './.config/hypr/*/target' -type d -prune -o -type f -print | sort)
 while IFS= read -r f; do link "${f#./}"; done < <(find ./Pictures -type f ! -name README.md | sort)   # wallpapers used by hyprpaper/hyprlock
 while IFS= read -r f; do link "${f#./}"; done < <(find ./.local/share -type f | sort)   # app data: Vicinae theme
 
@@ -56,7 +56,11 @@ else
 fi
 
 run systemctl --user daemon-reload || true
-command -v ghostty >/dev/null && ghostty +validate-config >/dev/null && echo "ghostty  config ok"
-command -v Hyprland >/dev/null && Hyprland --verify-config -c "$HOME/.config/hypr/hyprland.conf" 2>/dev/null | tail -1 | sed 's/^/hyprland /'
+if [ "$DRY" = "--dry-run" ]; then
+  echo "dry-run  skipped live config validation (configs are not linked yet)"
+else
+  command -v ghostty >/dev/null && ghostty +validate-config >/dev/null && echo "ghostty  config ok"
+  command -v Hyprland >/dev/null && Hyprland --verify-config -c "$HOME/.config/hypr/hyprland.conf" 2>/dev/null | tail -1 | sed 's/^/hyprland /'
+fi
 [ -d "$BACKUP" ] && echo "Backups: $BACKUP"
 echo "Done. Optional: scripts/packages.sh, scripts/gnome.sh, scripts/gdm-theme.sh"
