@@ -3,7 +3,7 @@
 Four Aura space wallpapers, 3840 × 2160. Each keeps the middle of the screen dark and calm, with the
 detail pushed out to the edges, so windows and the home-screen panel sit on a quiet background.
 
-`install.sh` links this folder to `~/Pictures/wallpapers/`.
+`install.sh` links the files in this folder to `~/Pictures/wallpapers/`; this README stays in the repository.
 
 ## aura-space-1 · Purple nebula
 

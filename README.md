@@ -99,10 +99,11 @@ Run `./install.sh --dry-run` first to see what it will do.
 | Super+Shift+S / Print | Area screenshot to clipboard |
 | Shift+Print | Area screenshot to ~/Pictures/Screenshots |
 | Super+L | Lock |
-| Super+Q | Close window (Spotify goes to the tray) |
+| Super+Q | Close window (Spotify goes to the minimized stash and keeps playing in the background) |
 | Super+Shift+E | Power menu (also Super+Esc) |
 
-Titlebar buttons: red closes, yellow minimizes, green gives the window its own workspace (press again to return).
+Titlebar buttons: red closes regular apps, yellow minimizes, and green gives the window its own workspace (press again to return).
+For Spotify, red parks it in the minimized stash so playback continues in the background.
 
 **Ghostty**
 | Key | Action |
@@ -110,7 +111,8 @@ Titlebar buttons: red closes, yellow minimizes, green gives the window its own w
 | Ctrl+T | New tab |
 | Ctrl+Shift+W | Close tab |
 | Ctrl+1…8 / Ctrl+9 | Go to tab / last tab |
-| Ctrl+Tab / Ctrl+Shift+Tab, Ctrl+Shift+← | Next / previous tab |
+| Ctrl+Tab | Next tab |
+| Ctrl+Shift+Tab / Ctrl+Shift+← | Previous tab |
 | Ctrl+Shift+→ / Ctrl+Shift+↓ | Split right / down |
 | Ctrl+Alt+Arrows | Move between splits |
 | Ctrl+Shift+Enter | Zoom split |
