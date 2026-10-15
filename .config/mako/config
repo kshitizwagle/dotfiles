@@ -23,7 +23,8 @@ border-color=#61ffca
 
 [app-name="Stash"]
 border-color=#a277ff
-default-timeout=10000
+on-button-left=invoke-default-action
+on-button-right=dismiss --no-history
 
 [urgency=low]
 text-color=#bdbdbd

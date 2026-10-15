@@ -105,7 +105,7 @@ Run `./install.sh --dry-run` first to see what it will do.
 
 Titlebar buttons: red closes regular apps, yellow minimizes, and green gives the window its own workspace (press again to return).
 For Spotify, red parks it in the minimized stash so playback continues in the background.
-Minimizing shows a "Minimized to stash" notification — click it to bring the window straight back.
+Minimizing shows a "Minimized to stash" toast: left-click restores the window, right-click just closes the toast.
 The stash pill in the top bar shows how many windows are minimized: left-click picks one, middle-click restores the newest, right-click restores all (it hides itself while the stash is empty).
 
 **Ghostty**
