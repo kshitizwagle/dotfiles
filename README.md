@@ -10,6 +10,8 @@ Ubuntu 26.04 · GNOME 50 + Hyprland 0.53 · **Aura Dark**
 | **aura-panel**: power, monitor, network, Bluetooth, notifications | **vicinae** launcher (Alt+Space) |
 | ![Neovim in Ghostty](docs/screenshots/terminal.jpg) | ![Power menu](docs/screenshots/powermenu.jpg) |
 | **Ghostty** + Neovim (Aura port), titlebar traffic lights | **wlogout** power menu (Super+Esc) |
+| ![Lock screen](docs/screenshots/lockscreen.jpg) | |
+| **hyprlock**: Aura card, English + Nepali (BS) date | |
 
 ## Fresh setup
 
