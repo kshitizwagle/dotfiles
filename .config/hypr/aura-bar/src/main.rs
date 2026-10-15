@@ -195,7 +195,7 @@ fn clock() {
         let bs = bs_today();
         // English date · weekday · Nepali (BS) date, then the time
         let text = format!(
-            "<span color='#908f98'>{}</span>  <span color='#6d6d6d'>·</span>  <span color='#edecee'>{}</span>  <span color='#6d6d6d'>·</span>  <span color='#a277ff'>{bs}</span>   <b>{}</b>",
+            "<span color='#a277ff'>{}</span>  <span color='#6d6d6d'>·</span>  <span color='#61ffca' weight='bold'>{}</span>  <span color='#6d6d6d'>·</span>  <span color='#a277ff'>{bs}</span>   <b>{}</b>",
             strftime(&tm, "%-d %b %Y"),
             strftime(&tm, "%A"),
             strftime(&tm, "%H:%M")
