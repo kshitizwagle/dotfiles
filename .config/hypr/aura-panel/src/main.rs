@@ -200,6 +200,8 @@ struct Media {
     length: i64,
     art: String,
     art_path: Option<String>,
+    /// mpris:trackid object path, needed to seek with SetPosition
+    track: String,
 }
 
 struct Panel {
@@ -222,6 +224,8 @@ struct Panel {
     media_art: gtk::Image,
     media_play: gtk::Button,
     media_bus: RefCell<Option<String>>,
+    media_track: RefCell<(String, i64)>, // (trackid, length µs) of the current song
+    scrubbing: Cell<bool>,
     media_art_url: RefCell<String>,
     // lights
     light_drop: gtk::DropDown,
@@ -363,6 +367,8 @@ impl Panel {
             media_art: gtk::Image::new(),
             media_play: gtk::Button::with_label("󰐊"),
             media_bus: RefCell::new(None),
+            media_track: RefCell::new((String::new(), 0)),
+            scrubbing: Cell::new(false),
             media_art_url: RefCell::new(String::new()),
             light_drop,
             light_ids: RefCell::new(vec![]),
@@ -994,6 +1000,7 @@ impl Panel {
         body.append(&controls);
         c.append(&body);
         c.append(&self.viz.area);
+        self.setup_scrub();
         c
     }
 
@@ -1467,6 +1474,7 @@ impl Panel {
             pos: int(props.lookup_value("Position", None)),
             length: int(meta.lookup_value("mpris:length", None)),
             art: s("mpris:artUrl"),
+            track: meta.lookup_value("mpris:trackid", None).and_then(|v| v.str().map(String::from)).unwrap_or_default(),
             art_path: None,
         };
         if !m.art.is_empty() && m.art != known_art {
@@ -1505,7 +1513,10 @@ impl Panel {
                 });
                 me.media_title.set_text(if st.title.is_empty() { "Unknown title" } else { &st.title });
                 me.media_artist.set_text(&st.artist);
-                me.viz.progress.set(if st.length > 0 { (st.pos as f64 / st.length as f64).min(1.0) } else { 0.0 });
+                if !me.scrubbing.get() {
+                    me.viz.progress.set(if st.length > 0 { (st.pos as f64 / st.length as f64).min(1.0) } else { 0.0 });
+                }
+                *me.media_track.borrow_mut() = (st.track.clone(), st.length);
                 me.media_play.set_label(if st.status == "Playing" { "󰏤" } else { "󰐊" });
                 if let Some(p) = &st.art_path {
                     me.media_art.set_from_file(Some(p));
@@ -1513,6 +1524,64 @@ impl Panel {
                 }
                 *me.media_bus.borrow_mut() = Some(st.name);
             }
+        });
+    }
+
+    /// Click or drag on the spectrum bar to seek: the fill follows the pointer while dragging and the
+    /// player jumps there on release (MPRIS SetPosition with the current track id).
+    fn setup_scrub(self: &Rc<Self>) {
+        self.viz.area.set_cursor_from_name(Some("pointer"));
+        let drag = gtk::GestureDrag::new();
+        let start_x = Rc::new(Cell::new(0.0));
+        let frac_at = {
+            let area = self.viz.area.clone();
+            move |x: f64| (x / area.width().max(1) as f64).clamp(0.0, 1.0)
+        };
+        let (me, sx, f) = (self.clone(), start_x.clone(), frac_at.clone());
+        drag.connect_drag_begin(move |_, x, _| {
+            sx.set(x);
+            me.scrubbing.set(true);
+            me.viz.progress.set(f(x));
+            me.viz.area.queue_draw();
+        });
+        let (me, sx, f) = (self.clone(), start_x.clone(), frac_at.clone());
+        drag.connect_drag_update(move |_, dx, _| {
+            me.viz.progress.set(f(sx.get() + dx));
+            me.viz.area.queue_draw();
+        });
+        let (me, sx, f) = (self.clone(), start_x, frac_at);
+        drag.connect_drag_end(move |_, dx, _| {
+            let frac = f(sx.get() + dx);
+            me.seek(frac);
+        });
+        self.viz.area.add_controller(drag);
+    }
+
+    fn seek(self: &Rc<Self>, frac: f64) {
+        let (track, length) = self.media_track.borrow().clone();
+        let Some(name) = self.media_bus.borrow().clone() else {
+            self.scrubbing.set(false);
+            return;
+        };
+        if track.is_empty() || length <= 0 {
+            self.scrubbing.set(false);
+            return;
+        }
+        let pos = (frac * length as f64) as i64;
+        let me = self.clone();
+        bg(move || {
+            let Ok(bus) = gio::bus_get_sync(gio::BusType::Session, None::<&gio::Cancellable>) else { return };
+            let Ok(path) = glib::variant::ObjectPath::try_from(track) else { return };
+            let args = (path, pos).to_variant();
+            let _ = bus.call_sync(Some(&name), "/org/mpris/MediaPlayer2", &format!("{MPRIS}.Player"), "SetPosition",
+                Some(&args), None, gio::DBusCallFlags::NONE, 2000, None::<&gio::Cancellable>);
+        }, move |_| {
+            // let the player report the new position before live updates take over again
+            let me2 = me.clone();
+            glib::timeout_add_local_once(Duration::from_millis(400), move || {
+                me2.scrubbing.set(false);
+                me2.refresh_media();
+            });
         });
     }
 
