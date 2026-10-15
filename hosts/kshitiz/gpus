@@ -1,0 +1,2 @@
+dgpu=/dev/dri/by-path/pci-0000:03:00.0-card
+igpu=/dev/dri/by-path/pci-0000:13:00.0-card

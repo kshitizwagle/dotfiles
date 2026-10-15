@@ -1,0 +1,62 @@
+[
+{
+  "name": "topbar",
+  "layer": "top",
+  "position": "top",
+  "height": 30,
+  "spacing": 4,
+  "modules-left": ["hyprland/workspaces", "hyprland/window"],
+  "custom/dashboard": { "exec": "~/.local/bin/aura-bar panelstate", "return-type": "json", "interval": "once", "signal": 9, "on-click": "~/.config/hypr/aura-panel/toggle.sh" },
+  "modules-center": [],
+  "modules-right": ["tray", "custom/clock", "custom/dashboard"],
+  "custom/dnd": { "exec": "~/.local/bin/aura-bar dnd", "return-type": "json", "interval": "once", "signal": 8, "on-click": "makoctl mode -t do-not-disturb; pkill -RTMIN+8 waybar" },
+  "custom/clock": { "exec": "~/.local/bin/aura-bar clock", "return-type": "json", "on-click": "pkill -USR2 -x aura-panel" },
+  "hyprland/workspaces": { "format": "{id}", "on-click": "activate" },
+  "hyprland/window": { "max-length": 60, "separate-outputs": true },
+  "clock": { "format": "{:%a %d %b  %H:%M}", "tooltip-format": "<tt>{calendar}</tt>" },
+  "cpu": { "format": " {usage}%", "interval": 5 },
+  "memory": { "format": " {percentage}%", "interval": 5 },
+  "network": {
+    "format-ethernet": "󰈀", "format-wifi": " {signalStrength}%", "format-disconnected": "󰖪",
+    "tooltip-format": "{ifname} {ipaddr}", "tooltip-format-wifi": "{essid} ({signalStrength}%) {ipaddr}",
+    "on-click": "~/.config/hypr/scripts/network.sh",
+    "on-click-right": "nm-connection-editor"
+  },
+  "bluetooth": {
+    "format": "󰂯", "format-off": "󰂲", "format-disabled": "󰂲", "format-connected": "󰂱 {num_connections}",
+    "tooltip-format-connected": "{device_enumerate}", "tooltip-format-enumerate-connected": "{device_alias}",
+    "on-click": "blueman-manager"
+  },
+  "pulseaudio": {
+    "format": "{icon} {volume}%", "format-muted": "󰝟", "format-icons": { "default": ["", "", ""] },
+    "scroll-step": 5,
+    "on-click": "~/.config/hypr/scripts/volume.sh",
+    "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+  },
+  "pulseaudio/slider": { "min": 0, "max": 100, "orientation": "horizontal" },
+  "tray": { "spacing": 8 }
+},
+{
+  "name": "dock",
+  "layer": "top",
+  "position": "bottom",
+  "height": 48,
+  "margin-bottom": 6,
+  "margin-left": 8,   // = Hyprland gaps_out, so the dock lines up with window edges
+  "margin-right": 8,
+  "exclusive": true,
+  "modules-center": ["custom/apps", "custom/files", "custom/browser", "custom/term", "custom/code", "custom/spotify", "wlr/taskbar"],
+  "custom/apps": { "format": "󰀻", "tooltip-format": "Apps", "on-click": "vicinae toggle" },
+  "custom/files": { "exec": "~/.local/bin/aura-bar dock 󰉋 org.gnome.Nautilus", "return-type": "json", "tooltip-format": "Files", "on-click": "~/.config/hypr/scripts/dock.sh open '^org\\.gnome\\.Nautilus$' nautilus", "on-click-middle": "nautilus" },
+  "custom/browser": { "exec": "~/.local/bin/aura-bar dock 󰊯 google-chrome", "return-type": "json", "tooltip-format": "Chrome", "on-click": "~/.config/hypr/scripts/dock.sh open '^google-chrome$' gtk-launch google-chrome.desktop", "on-click-middle": "gtk-launch google-chrome.desktop" },
+  "custom/term": { "exec": "~/.local/bin/aura-bar dock 󰆍 com.mitchellh.ghostty", "return-type": "json", "tooltip-format": "Ghostty", "on-click": "~/.config/hypr/scripts/dock.sh open '^com\\.mitchellh\\.ghostty$' ghostty", "on-click-middle": "ghostty" },
+  "custom/spotify": { "exec": "~/.local/bin/aura-bar dock 󰓇 Spotify", "return-type": "json", "tooltip-format": "Spotify", "on-click": "~/.config/hypr/scripts/dock.sh open '^Spotify$' spotify", "on-click-middle": "spotify" },
+  "custom/code": { "exec": "~/.local/bin/aura-bar dock 󰨞 code,code-url-handler,com.microsoft.VSCode", "return-type": "json", "tooltip-format": "VS Code", "on-click": "~/.config/hypr/scripts/dock.sh open '^(code|code-url-handler|com\\.microsoft\\.VSCode)$' gtk-launch com.microsoft.VSCode.desktop", "on-click-middle": "gtk-launch com.microsoft.VSCode.desktop" },
+  "wlr/taskbar": {
+    "format": "{icon}", "icon-size": 28, "icon-theme": "WhiteSur-dark",
+    "tooltip-format": "{title}", "on-click": "activate", "on-click-middle": "close",
+    "all-outputs": false,
+    "ignore-list": ["google-chrome", "org.gnome.Nautilus", "com.mitchellh.ghostty", "code", "com.microsoft.VSCode", "Spotify", "spotify"]
+  }
+}
+]

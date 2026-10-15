@@ -1,0 +1,127 @@
+/* Aura Dark — tokens: bg-deep #15141b, surface #1d1c25, border #2e2c3a,
+   fg #edecee, metadata #908f98, accent #a277ff, tint #3d375e */
+* {
+  font-family: "BlexMono Nerd Font", "IBM Plex Mono", monospace;
+  font-size: 12px;
+  border: none;
+  border-radius: 0;
+  min-height: 0;
+}
+window#waybar {
+  background: rgba(21, 20, 27, 0.85);
+  border-bottom: 1px solid #2e2c3a;
+  color: #edecee;
+}
+tooltip {
+  background: #25242f;
+  border: 1px solid #2e2c3a;
+  border-radius: 6px;
+}
+tooltip label { color: #edecee; }
+
+#workspaces button {
+  padding: 0 8px;
+  color: #908f98;
+  background: transparent;
+  transition: background-color 150ms cubic-bezier(0.23, 1, 0.32, 1), color 150ms cubic-bezier(0.23, 1, 0.32, 1), box-shadow 150ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+#workspaces button:hover { background: #3d375e; color: #edecee; }
+#workspaces button.active { color: #a277ff; box-shadow: inset 0 -2px #a277ff; }
+#workspaces button.urgent { color: #ff6767; }
+
+#window { color: #908f98; padding: 0 8px; }
+#clock { color: #edecee; }
+
+#cpu, #memory, #network, #pulseaudio, #tray, #custom-notifications {
+  padding: 0 10px;
+  color: #bdbdbd;
+}
+#pulseaudio.muted, #network.disconnected { color: #6d6d6d; }
+#cpu.warning, #memory.warning { color: #ffca85; }
+#cpu.critical, #memory.critical { color: #ff6767; }
+
+#custom-power { padding: 0 12px 0 8px; color: #ff6767; }
+#custom-power:hover { background: #3d375e; }
+#bluetooth { padding: 0 10px; color: #bdbdbd; }
+#bluetooth.off, #bluetooth.disabled { color: #6d6d6d; }
+#network:hover, #pulseaudio:hover, #bluetooth:hover { background: #3d375e; }
+#pulseaudio-slider { min-width: 90px; padding: 0 4px; }
+#pulseaudio-slider slider { min-height: 0; min-width: 0; opacity: 0; background: none; box-shadow: none; }
+#pulseaudio-slider trough { min-height: 6px; border-radius: 3px; background: #2e2c3a; }
+#pulseaudio-slider highlight { min-height: 6px; border-radius: 3px; background: #a277ff; }
+
+/* Dock */
+window#waybar.dock {
+  background: transparent;
+  border: none;
+}
+window#waybar.dock > box {
+  background: rgba(29, 28, 37, 0.97);
+  border: 1px solid #2e2c3a;
+  border-radius: 14px;
+  padding: 0 6px;
+}
+window#waybar.dock #custom-apps { color: #a277ff; }
+window#waybar.dock #custom-files { color: #6fb7e8; }
+window#waybar.dock #custom-browser { color: #f2c94c; }
+window#waybar.dock #custom-term { color: #edecee; }
+window#waybar.dock #custom-code { color: #3ea6f2; }
+#taskbar button { padding: 4px 6px; border-radius: 10px; background: transparent; }
+#taskbar button:hover, window#waybar.dock #custom-apps:hover, window#waybar.dock #custom-files:hover,
+window#waybar.dock #custom-browser:hover, window#waybar.dock #custom-term:hover, window#waybar.dock #custom-code:hover,
+window#waybar.dock #custom-spotify:hover { background: #3d375e; }
+#taskbar button.active { box-shadow: inset 0 -2px #a277ff; }
+
+/* Dock: open-app cue = brightness + tile (a 2px underline was too easy to miss).
+   not open: dimmed icon · open: full colour on a soft lavender tile · focused: stronger tile + Aura outline */
+window#waybar.dock #custom-files, window#waybar.dock #custom-browser,
+window#waybar.dock #custom-term, window#waybar.dock #custom-code, window#waybar.dock #custom-spotify {
+  opacity: 0.4;
+  margin: 4px 2px;
+  border: 1px solid transparent;
+  transition: opacity 150ms cubic-bezier(0.23, 1, 0.32, 1), background-color 150ms cubic-bezier(0.23, 1, 0.32, 1), border-color 150ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+window#waybar.dock #custom-files.running, window#waybar.dock #custom-browser.running,
+window#waybar.dock #custom-term.running, window#waybar.dock #custom-code.running, window#waybar.dock #custom-spotify.running {
+  opacity: 1;
+  background-color: rgba(61, 55, 94, 0.55);
+}
+window#waybar.dock #custom-files.focused, window#waybar.dock #custom-browser.focused,
+window#waybar.dock #custom-term.focused, window#waybar.dock #custom-code.focused, window#waybar.dock #custom-spotify.focused {
+  background-color: #3d375e;
+  border-color: #a277ff;
+}
+window#waybar.dock #custom-files:hover, window#waybar.dock #custom-browser:hover,
+window#waybar.dock #custom-term:hover, window#waybar.dock #custom-code:hover, window#waybar.dock #custom-spotify:hover { opacity: 1; }
+
+/* Dashboard launcher (top-left) */
+#custom-dashboard { padding: 0 14px 0 6px; color: #a277ff; font-size: 15px; }
+#custom-dashboard:hover { background: #3d375e; }
+#custom-controlcenter { padding: 0 6px 0 8px; color: #a277ff; font-size: 15px; }
+#custom-controlcenter:hover { background: #3d375e; }
+#custom-clock { padding: 0 12px 0 6px; color: #edecee; }
+
+#custom-dnd { padding: 0 8px; font-size: 16px; }
+#custom-dnd.on { color: #a277ff; }
+#custom-dnd.off { color: #908f98; }
+#custom-dashboard.open { color: #a277ff; background: #3d375e; box-shadow: inset 0 -2px #a277ff; }
+
+/* dock press feedback (GTK3 can't scale: instant darken, eases back via the 150ms transition) */
+window#waybar.dock #custom-apps:active, window#waybar.dock #custom-files:active, window#waybar.dock #custom-browser:active,
+window#waybar.dock #custom-term:active, window#waybar.dock #custom-code:active, window#waybar.dock #custom-spotify:active,
+#taskbar button:active { background: #15141b; transition: none; }
+
+/* Dock icons: square tiles with the glyph centred both ways. The Propo variant gives Nerd Font
+   icons their true width (the regular one lets them overhang their cell, pulling them off-centre).
+   Every dock icon (Spotify included) shares this one rule so they all render at the same size. */
+window#waybar.dock #custom-apps, window#waybar.dock #custom-files, window#waybar.dock #custom-browser,
+window#waybar.dock #custom-term, window#waybar.dock #custom-code, window#waybar.dock #custom-spotify {
+  font-family: "BlexMono Nerd Font Propo";
+  font-size: 22px;
+  min-width: 40px;
+  min-height: 40px;
+  padding: 0;
+  margin: 4px 3px;
+  border-radius: 10px;
+}
+window#waybar.dock #custom-spotify { color: #61ffca; }

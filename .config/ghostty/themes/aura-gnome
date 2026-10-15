@@ -1,0 +1,25 @@
+# Ported from GNOME Terminal profile "Aura Theme"
+background = #15141b
+foreground = #edecee
+cursor-color = #a277ff
+cursor-text = #15141b
+selection-background = #3d375e
+bold-color = #edecee
+
+palette = 0=#110f18
+palette = 1=#ff6767
+palette = 2=#61ffca
+palette = 3=#ffca85
+palette = 4=#a277ff
+palette = 5=#a277ff
+palette = 6=#61ffca
+palette = 7=#edecee
+palette = 8=#6d6d6d
+palette = 9=#ffca85
+palette = 10=#a277ff
+palette = 11=#ffca85
+palette = 12=#a277ff
+palette = 13=#a277ff
+palette = 14=#61ffca
+palette = 15=#edecee
+selection-foreground = #edecee

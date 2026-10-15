@@ -1,0 +1,231 @@
+/* Aura palette — bg #15141b, surface #1d1c25, border #2e2c3a, fg #edecee, dim #6d6d6d,
+   purple #a277ff, green #61ffca, orange #ffca85, pink #f694ff, blue #82e2ff, red #ff6767, tint #3d375e */
+* {
+  font-family: "BlexMono Nerd Font", "IBM Plex Sans", sans-serif;
+  font-size: 13px;
+  color: #edecee;
+  box-shadow: none;
+  text-shadow: none;
+}
+
+window { background: transparent; }
+scrolledwindow, viewport { background: transparent; border: none; }
+scrollbar { opacity: 0; }
+
+.panel {
+  background-color: rgba(21, 20, 27, 0.92);
+  border: 1px solid #2e2c3a;
+  border-radius: 18px;
+  padding: 14px;
+}
+
+.card {
+  background-color: #1d1c25;
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.title { font-weight: bold; color: #a277ff; }
+.dim { color: #908f98; font-size: 12px; }
+.name { font-size: 18px; font-weight: bold; color: #a277ff; }
+.avatar {
+  font-size: 54px; font-weight: bold; color: #15141b;
+  background-color: #a277ff; border-radius: 999px;
+  min-width: 110px; min-height: 110px;
+  padding: 0;
+}
+
+button {
+  background-image: none;
+  border: none;
+  border-radius: 10px;
+  padding: 0;
+  transition: background-color 150ms cubic-bezier(0.23, 1, 0.32, 1), color 150ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.icon-btn { font-size: 20px; min-height: 46px; min-width: 46px; background-color: #2e2c3a; color: #edecee; }
+.icon-btn:hover { background-color: #3d375e; }
+.icon-btn label { font-size: 20px; }
+
+.action { background-color: #29263c; }
+.action label { color: #a277ff; }
+.action:hover { background-color: #3d375e; }
+
+/* solid colored buttons (power column) */
+.solid label { color: #15141b; }
+.solid.c-blue   { background-color: #82e2ff; }
+.solid.c-purple { background-color: #a277ff; }
+.solid.c-orange { background-color: #ffca85; }
+.solid.c-red    { background-color: #ff6767; }
+.solid:hover    { opacity: 0.85; }
+.armed { background-color: #edecee; }
+.armed label { color: #ff6767; }
+
+/* toggles: dim when off, palette color when on */
+.toggle { background-color: #2e2c3a; }
+.toggle label { color: #6d6d6d; }
+.toggle.on.c-purple { background-color: #a277ff; }
+.toggle.on.c-blue   { background-color: #82e2ff; }
+.toggle.on.c-orange { background-color: #ffca85; }
+.toggle.on.c-red    { background-color: #ff6767; }
+.toggle.on.c-pink   { background-color: #f694ff; }
+.toggle.on label    { color: #15141b; }
+
+.small { min-height: 34px; min-width: 38px; }
+.small label { font-size: 16px; }
+.c-green label, label.c-green { color: #61ffca; }
+.c-red label, label.c-red { color: #ff6767; }
+
+.folder { background: transparent; padding: 4px 6px; }
+.folder label { color: #f694ff; font-weight: bold; }
+.folder:hover { background-color: #2e2c3a; }
+
+.bar-icon { font-size: 22px; }
+label.c-red { color: #ff6767; }
+label.c-orange { color: #ffca85; }
+label.c-pink { color: #f694ff; }
+label.c-purple { color: #a277ff; }
+
+levelbar trough { background-color: #2e2c3a; border: none; border-radius: 999px; min-height: 12px; padding: 0; }
+levelbar block.filled { border: none; border-radius: 999px; min-height: 12px; }
+levelbar block.empty { background: transparent; border: none; }
+levelbar.c-red block.filled    { background-color: #ff6767; }
+levelbar.c-orange block.filled { background-color: #ffca85; }
+levelbar.c-pink block.filled   { background-color: #f694ff; }
+levelbar.c-purple block.filled { background-color: #a277ff; }
+
+scale trough { background-color: #2e2c3a; border: none; border-radius: 999px; min-height: 6px; }
+scale highlight { background-color: #a277ff; border-radius: 999px; }
+scale slider { background-color: #edecee; border: none; border-radius: 999px; min-width: 14px; min-height: 14px; }
+
+combobox button { background-color: #2e2c3a; padding: 6px 10px; }
+combobox button:hover { background-color: #3d375e; }
+menu, .menu { background-color: #1d1c25; border: 1px solid #2e2c3a; }
+menuitem:hover { background-color: #3d375e; }
+
+.container { background: transparent; padding: 5px 6px; border-radius: 8px; }
+.container:hover { background-color: #2e2c3a; }
+.cname { font-size: 12px; }
+
+/* solid buttons keep dark glyphs even when they share a color class with text rules */
+.solid.c-red label, .solid.c-blue label, .solid.c-purple label, .solid.c-orange label { color: #15141b; }
+
+/* full-screen surface: transparent on the desktop, dimmed (and blurred by Hyprland) when raised */
+window { background-color: rgba(0, 0, 0, 0); }
+.backdrop { background-color: rgba(0, 0, 0, 0); }
+.backdrop.raised { background-color: rgba(15, 14, 20, 0.35); }
+.stack { color: #82e2ff; font-weight: bold; font-size: 12px; margin-top: 6px; }
+
+/* Docker: compact rows inside per-stack mini cards */
+.stackcard { background-color: #15141b; border-radius: 10px; padding: 8px 8px 6px; }
+.stack { margin-top: 0; margin-bottom: 4px; }
+.container { padding: 2px 4px; min-height: 0; }
+.container label { font-size: 12px; }
+flowboxchild { padding: 0; }
+
+/* press feedback: instant darken on :active (GTK3 can't scale), released back via the 150ms transition */
+button:active { transition: none; }
+.icon-btn:active, .action:active, .toggle:active, combobox button:active { background-color: #15141b; }
+.solid:active { opacity: 0.7; }
+.folder:active, .container:active { background-color: #15141b; }
+
+/* Control Center popover */
+.cc-catcher { background-color: rgba(0, 0, 0, 0); }
+.cc-item { background: transparent; padding: 6px 8px; border-radius: 8px; }
+.cc-item:hover { background-color: #2e2c3a; }
+.cc-item:active { background-color: #15141b; }
+.cc-item.active { background-color: #3d375e; }
+.cc-item.active label { color: #edecee; }
+.cc-glyph { font-size: 16px; color: #a277ff; min-width: 18px; }
+switch { background-color: #2e2c3a; border: none; border-radius: 999px; }
+switch:checked { background-color: #a277ff; }
+switch slider { background-color: #edecee; border: none; border-radius: 999px; min-width: 18px; min-height: 18px; }
+
+/* Notification history */
+.notif { background-color: #15141b; border-radius: 10px; padding: 8px 10px; }
+.notif-app { color: #82e2ff; font-size: 11px; font-weight: bold; }
+.notif-summary { font-weight: bold; }
+
+/* Control Center accordions */
+.cc-acc-head { padding: 6px 8px; border-radius: 8px; }
+.cc-acc-head:hover { background-color: #2e2c3a; }
+.cc-acc-title { font-weight: bold; color: #edecee; }
+.cc-acc-body { padding: 2px 0 4px 18px; }
+
+/* Now playing */
+.art { border-radius: 12px; min-width: 25px; min-height: 25px; background-color: #15141b; }
+.media-title { font-size: 13px; font-weight: bold; color: #edecee; }
+.media-artist { font-size: 11px; color: #f694ff; }
+.media-btn { min-width: 32px; min-height: 32px; border-radius: 999px; }
+.media-btn label { font-size: 16px; }
+
+/* inline power confirmation */
+.confirm-bar { background-color: #1d1c25; border: 1px solid #ff6767; border-radius: 12px; padding: 8px 8px 8px 14px; }
+.confirm-text { font-weight: bold; color: #edecee; }
+.confirm-cancel { background-color: #2e2c3a; padding: 6px 14px; }
+.confirm-cancel:hover { background-color: #3d375e; }
+.confirm-go { background-color: #ff6767; padding: 6px 14px; }
+.confirm-go label { color: #15141b; font-weight: bold; }
+.confirm-go:active, .confirm-cancel:active { background-color: #15141b; }
+
+/* Docker totals */
+.metric { background-color: #15141b; border-radius: 10px; padding: 8px 10px; }
+.metric-icon { font-size: 14px; }
+.metric-value { font-size: 18px; font-weight: bold; color: #edecee; }
+
+/* ---- GTK4 widgets (aura-panel) ---- */
+dropdown > button { background-color: #2e2c3a; color: #edecee; border: none; border-radius: 10px; padding: 6px 10px; min-height: 0; box-shadow: none; }
+dropdown > button:hover { background-color: #3d375e; }
+dropdown > button:active { background-color: #15141b; }
+dropdown > button label, dropdown > button arrow { color: #edecee; }
+dropdown label { color: #edecee; }
+popover > contents { background-color: #1d1c25; border: 1px solid #2e2c3a; border-radius: 12px; padding: 4px; box-shadow: none; }
+popover listview, popover list { background: transparent; }
+popover row { border-radius: 8px; padding: 4px 8px; }
+popover row:hover, popover row:selected { background-color: #3d375e; }
+popover row label { color: #edecee; }
+popover arrow { background-color: #1d1c25; border: 1px solid #2e2c3a; }
+
+scale > trough { background-color: #2e2c3a; border: none; border-radius: 999px; min-height: 6px; }
+scale > trough > highlight { background-color: #a277ff; border: none; border-radius: 999px; margin: 0; min-width: 0; min-height: 6px; }
+/* knob: GTK4 pulls it out with a negative margin, so size and margin must agree (min 16 - 2×5 > 0) */
+scale > trough > slider { background-color: #edecee; border: none; border-radius: 999px; min-width: 16px; min-height: 16px; margin: -5px; box-shadow: none; }
+scale > trough > slider:hover { background-color: #ffffff; }
+
+/* ---- motion (GTK4 can transform): press scales to 0.97 instantly, release eases back ---- */
+button { transition: transform 160ms cubic-bezier(0.23, 1, 0.32, 1), background-color 150ms cubic-bezier(0.23, 1, 0.32, 1), color 150ms cubic-bezier(0.23, 1, 0.32, 1); }
+button:active { transform: scale(0.97); transition: transform 60ms cubic-bezier(0.23, 1, 0.32, 1); }
+.icon-btn:active, .media-btn:active, .confirm-go:active, .confirm-cancel:active { transform: scale(0.94); }
+switch slider { transition: transform 160ms cubic-bezier(0.23, 1, 0.32, 1); }
+
+.sys-name { font-size: 12px; font-weight: bold; color: #edecee; }
+
+/* DND toggle in the Notifications header */
+.dnd-btn.on { background-color: #a277ff; }
+.dnd-btn.on label { color: #15141b; }
+
+/* Calendar popover (top bar clock) */
+.calendar { padding: 14px; }
+.cal-modes { background-color: #15141b; border-radius: 10px; padding: 3px; }
+.cal-mode { background: transparent; padding: 4px 10px; border-radius: 8px; }
+.cal-mode:checked { background-color: #3d375e; }
+.cal-mode:checked label { color: #a277ff; }
+.cal-title { font-size: 16px; font-weight: bold; color: #edecee; }
+.cal-nav { background-color: #2e2c3a; padding: 4px 10px; min-height: 0; }
+.cal-nav:hover { background-color: #3d375e; }
+.cal-dow { color: #908f98; font-size: 11px; padding: 4px 0; }
+.cal-day { border-radius: 8px; padding: 4px 0; min-height: 34px; transition: background-color 150ms cubic-bezier(0.23, 1, 0.32, 1); }
+.cal-day:hover { background-color: #2e2c3a; }
+.cal-num { font-size: 14px; color: #edecee; }
+.cal-sub { font-size: 9px; color: #6d6d6d; }
+.cal-sat .cal-num, label.cal-sat { color: #ff6767; }
+.cal-today { background-color: #a277ff; }
+.cal-today .cal-num { color: #15141b; font-weight: bold; }
+.cal-today .cal-sub { color: #3d375e; }
+
+/* System "bucket" tiles: the overlay draws the background + fill, the content sits on top */
+.metric-content { background: transparent; padding: 0; }
+.calendar { background-color: #1d1c25; border: 1px solid #2e2c3a; }
+
+/* CPU / GPU model under the tile title */
+.metric-name { color: #edecee; font-size: 11px; opacity: 0.75; }

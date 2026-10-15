@@ -1,0 +1,39 @@
+/* Aura power menu: frosted Aura cards over the blurred wallpaper */
+* { background-image: none; box-shadow: none; }
+
+window {
+  background-color: rgba(21, 20, 27, 0.85);
+  background-size: cover;
+  background-position: center;
+}
+
+button {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: 13px;
+  color: #edecee;
+  background-color: rgba(21, 20, 27, 0.72);
+  background-repeat: no-repeat;
+  background-position: center 40%;
+  background-size: 34%;
+  border: 1px solid #2e2c3a;
+  border-radius: 22px;
+  margin: 8px;
+  min-width: 150px;
+  min-height: 150px;
+  transition: background-color 150ms cubic-bezier(0.23, 1, 0.32, 1), border-color 150ms cubic-bezier(0.23, 1, 0.32, 1), color 150ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+button:focus, button:hover {
+  background-color: rgba(61, 55, 94, 0.75);
+  border-color: #a277ff;
+  color: #a277ff;
+  outline-style: none;
+}
+
+#lock     { background-image: image(url("icons/lock.png")); }
+#logout   { background-image: image(url("icons/logout.png")); }
+#suspend  { background-image: image(url("icons/suspend.png")); }
+#reboot   { background-image: image(url("icons/reboot.png")); }
+#shutdown { background-image: image(url("icons/shutdown.png")); }
+
+button:active { background-color: rgba(21, 20, 27, 0.9); transition: none; }

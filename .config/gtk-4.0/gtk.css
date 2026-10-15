@@ -1,0 +1,10 @@
+/* Aura Dark — libadwaita color variables only */
+:root {
+  --accent-bg-color:#a277ff; --accent-color:#a277ff; --accent-fg-color:#15141b;
+  --window-bg-color:#15141b; --window-fg-color:#edecee;
+  --view-bg-color:#15141b;   --view-fg-color:#edecee;
+  --headerbar-bg-color:#0f0e14; --headerbar-fg-color:#edecee;
+  --sidebar-bg-color:#0f0e14; --secondary-sidebar-bg-color:#15141b;
+  --card-bg-color:#1d1c25; --popover-bg-color:#25242f; --dialog-bg-color:#1d1c25;
+  --border-color:#2e2c3a; --window-radius:6px;
+}

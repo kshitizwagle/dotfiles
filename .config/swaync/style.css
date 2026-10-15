@@ -1,0 +1,26 @@
+/* Aura Dark */
+* { font-family: "IBM Plex Mono", monospace; font-size: 12px; }
+.notification-row { outline: none; }
+.notification {
+  background: #1d1c25;
+  border: 1px solid #2e2c3a;
+  border-radius: 6px;
+  margin: 6px;
+  padding: 0;
+}
+.notification-content { padding: 10px; }
+.summary { color: #edecee; font-weight: bold; }
+.body, .time { color: #908f98; }
+.notification.critical { border-color: #ff6767; }
+.close-button { background: #25242f; color: #edecee; border-radius: 6px; }
+.close-button:hover { background: #3d375e; }
+.control-center {
+  background: rgba(15, 14, 20, 0.85);
+  border: 1px solid #2e2c3a;
+  border-radius: 6px;
+  color: #edecee;
+}
+.widget-title > button, .widget-dnd > switch {
+  background: #25242f; color: #edecee; border: 1px solid #2e2c3a; border-radius: 6px;
+}
+.widget-dnd > switch:checked { background: #a277ff; }

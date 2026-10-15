@@ -1,0 +1,17 @@
+# generated per machine by install.sh
+.config/hypr/host.conf
+.config/hypr/dgpu
+.config/hypr/igpu
+# never commit
+.env
+*.key
+*.pem
+.ssh/id_*
+.ssh/known_hosts*
+.dotfiles-backup/
+
+# Rust build output (aura-panel, aura-bar)
+.config/hypr/*/target/
+
+# real SSH host aliases stay local; see .ssh/config.example
+.ssh/config

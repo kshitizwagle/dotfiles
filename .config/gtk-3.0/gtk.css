@@ -1,0 +1,8 @@
+/* Aura Dark — Adwaita-dark color overrides */
+@define-color theme_bg_color #15141b;
+@define-color theme_base_color #15141b;
+@define-color theme_fg_color #edecee;
+@define-color theme_text_color #edecee;
+@define-color theme_selected_bg_color #a277ff;
+@define-color theme_selected_fg_color #15141b;
+@define-color borders #2e2c3a;

@@ -1,0 +1,7 @@
+[Unit]
+Description=Hyprland session
+Documentation=man:systemd.special(7)
+# Pulls up graphical-session.target (portals, waybar, swaync...) and takes it down with us
+BindsTo=graphical-session.target
+Wants=graphical-session-pre.target
+After=graphical-session-pre.target

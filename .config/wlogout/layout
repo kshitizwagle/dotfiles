@@ -1,0 +1,4 @@
+{ "label": "lock",     "action": "loginctl lock-session",                              "text": "Lock",     "keybind": "l" }
+{ "label": "logout",   "action": "~/.config/hypr/scripts/session.sh stop; hyprctl dispatch exit",                           "text": "Logout",   "keybind": "e" }
+{ "label": "reboot",   "action": "~/.config/hypr/scripts/session.sh stop; systemctl reboot",                                "text": "Reboot",   "keybind": "r" }
+{ "label": "shutdown", "action": "~/.config/hypr/scripts/session.sh stop; systemctl poweroff",                              "text": "Shutdown", "keybind": "s" }

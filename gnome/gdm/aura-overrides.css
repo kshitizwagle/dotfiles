@@ -1,0 +1,95 @@
+/* ===== Aura Dark login screen =====
+   bg-deep #0f0e14  bg #15141b  surface #1d1c25  border #2e2c3a
+   fg #edecee  metadata #908f98  accent #a277ff  tint #3d375e */
+#lockDialogGroup {
+  background-color: #0f0e14;
+  background-image: none;
+}
+.login-dialog { background-color: transparent; color: #edecee; }
+
+/* panel + clock */
+.login-screen #panel, .unlock-screen #panel, #panel.login-screen { background-color: transparent; }
+#panel .clock-display, #panel .panel-button { color: #908f98; font-family: "IBM Plex Mono", monospace; }
+
+/* the card */
+.login-dialog-prompt-layout {
+  background-color: #1d1c25;
+  border: 1px solid #2e2c3a;
+  border-radius: 6px;
+  padding: 32px 28px 24px;
+}
+
+/* user list */
+.login-dialog-user-list-view .login-dialog-user-list .login-dialog-user-list-item {
+  background-color: transparent;
+  border-radius: 6px;
+  color: #edecee;
+}
+.login-dialog-user-list-view .login-dialog-user-list .login-dialog-user-list-item:hover { background-color: #25242f; }
+.login-dialog-user-list-view .login-dialog-user-list .login-dialog-user-list-item:focus,
+.login-dialog-user-list-view .login-dialog-user-list .login-dialog-user-list-item:selected { background-color: #3d375e; }
+.login-dialog-user-list-view .login-dialog-user-list .login-dialog-user-list-item .login-dialog-timed-login-indicator { background-color: #a277ff; }
+
+/* avatar */
+.login-dialog .user-icon { border: 1px solid #2e2c3a; background-color: #25242f; color: #908f98; }
+.login-dialog .user-widget-label, .login-dialog .user-widget .user-widget-label { color: #edecee; }
+
+/* password entry */
+.login-dialog StEntry, .login-dialog-prompt-entry {
+  background-color: #15141b;
+  border: 1px solid #2e2c3a;
+  border-radius: 6px;
+  color: #edecee;
+  caret-color: #a277ff;
+  selection-background-color: #3d375e;
+  selected-color: #edecee;
+  box-shadow: none;
+}
+.login-dialog StEntry:hover { border-color: #3d375e; background-color: #15141b; }
+.login-dialog StEntry:focus { border-color: #a277ff; background-color: #15141b; box-shadow: none; }
+.login-dialog StEntry StLabel.hint-text { color: #6d6d6d; }
+
+/* buttons: accent only on the primary action */
+.login-dialog .button, .login-dialog .modal-dialog-button {
+  background-color: #25242f;
+  color: #edecee;
+  border: 1px solid #2e2c3a;
+  border-radius: 6px;
+  box-shadow: none;
+}
+.login-dialog .button:hover, .login-dialog .modal-dialog-button:hover { background-color: #3d375e; }
+.login-dialog .button.default, .login-dialog .modal-dialog-button.default {
+  background-color: #a277ff;
+  color: #15141b;
+  border-color: #a277ff;
+}
+.login-dialog .button.default:hover, .login-dialog .modal-dialog-button.default:hover { background-color: #8464c6; border-color: #8464c6; }
+
+/* small round icon buttons (session gear, cancel, a11y) */
+.login-dialog-button.login-dialog-session-list-button,
+.login-dialog-button.cancel-button,
+.login-dialog-button.a11y-button,
+.login-dialog-button.switch-user-button {
+  background-color: transparent;
+  color: #908f98;
+  border: 1px solid transparent;
+}
+.login-dialog-button.login-dialog-session-list-button:hover,
+.login-dialog-button.cancel-button:hover,
+.login-dialog-button.a11y-button:hover,
+.login-dialog-button.switch-user-button:hover { background-color: #25242f; color: #edecee; border-color: #2e2c3a; }
+
+/* messages */
+.login-dialog-not-listed-label, .login-dialog-banner { color: #908f98; }
+.login-dialog-message-warning { color: #ffca85; }
+.login-dialog-message { color: #908f98; }
+
+/* menus (session picker) */
+.login-dialog .popup-menu-content, .popup-menu .popup-menu-content {
+  background-color: #25242f;
+  border: 1px solid #2e2c3a;
+  border-radius: 6px;
+  color: #edecee;
+}
+.popup-menu .popup-menu-item:hover, .popup-menu .popup-menu-item:focus { background-color: #3d375e; color: #edecee; }
+.popup-menu .popup-menu-item:checked { color: #a277ff; }

@@ -1,0 +1,11 @@
+blur-my-shell@aunetx
+logomenu@aryan_k
+just-perfection-desktop@just-perfection
+nepali-calendar-gs-extension@subashghimire.info.np
+vicinae@dagimg-dot
+snapd-prompting@canonical.com
+snapd-search-provider@canonical.com
+tiling-assistant@ubuntu.com
+ubuntu-appindicators@ubuntu.com
+ubuntu-dock@ubuntu.com
+web-search-provider@ubuntu.com
