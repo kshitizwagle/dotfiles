@@ -19,6 +19,9 @@
       }
    },
    "close_on_focus_loss": true,
+   "telemetry": {
+      "system_info": false
+   },
    "launcher_window": {
       "layer_shell": {
          "keyboard_interactivity": "on_demand"
