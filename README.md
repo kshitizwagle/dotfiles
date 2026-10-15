@@ -4,14 +4,47 @@ Ubuntu 26.04 · GNOME 50 + Hyprland 0.53 · **Aura Dark**
 
 ![Desktop](docs/screenshots/desktop.jpg)
 
-| | |
-|---|---|
-| ![Side panel](docs/screenshots/panel.jpg) | ![Launcher](docs/screenshots/launcher.jpg) |
-| **aura-panel**: power, monitor, network, Bluetooth, notifications | **vicinae** launcher (Alt+Space) |
-| ![Neovim in Ghostty](docs/screenshots/terminal.jpg) | ![Power menu](docs/screenshots/powermenu.jpg) |
-| **Ghostty** + Neovim (Aura port), titlebar traffic lights | **wlogout** power menu (Super+Esc) |
-| ![Lock screen](docs/screenshots/lockscreen.jpg) | |
-| **hyprlock**: Aura card, English + Nepali (BS) date | |
+The home screen: aura-panel's cards on the desktop layer (they sit under windows), the aura-bar dock, and the top bar with the English · weekday · Nepali date.
+
+## Side panel
+
+**aura-panel** (Super+D): power with confirmation, primary monitor, Ethernet / Wi-Fi / Bluetooth,
+notification history and Do Not Disturb. The same panel's home-screen cards (Docker stacks, now playing
+with a seekable spectrum bar, live CPU / memory / GPU / disk graphs, lights, sound) sit on the desktop.
+
+![Side panel](docs/screenshots/panel.jpg)
+
+## Calendar
+
+Click the top-bar clock: a month view in **Gregorian** or **नेपाली** (Bikram Sambat) with the other
+calendar's day under each date, previous/next month, Today, and Saturdays (Nepal's weekly holiday) in red.
+
+![Calendar](docs/screenshots/calendar.jpg)
+
+## Launcher
+
+**vicinae** (Alt+Space) in the Aura theme; Super+Alt+V shows clipboard history in the same window.
+
+![Launcher](docs/screenshots/launcher.jpg)
+
+## Terminal
+
+**Ghostty** with Neovim (the official Aura port), and macOS-style traffic-light titlebars from hyprbars.
+
+![Neovim in Ghostty](docs/screenshots/terminal.jpg)
+
+## Power menu
+
+**wlogout** (Super+Esc): a 2 × 2 grid of Aura cards over the blurred wallpaper.
+
+![Power menu](docs/screenshots/powermenu.jpg)
+
+## Lock screen
+
+**hyprlock**: one Aura card with the time, the English · weekday · Nepali (BS) date, and an avatar
+from `~/.face` (`.config/hypr/scripts/set-avatar.sh <picture>`), falling back to an initial.
+
+![Lock screen](docs/screenshots/lockscreen.jpg)
 
 ## Fresh setup
 
@@ -32,7 +65,7 @@ Run `./install.sh --dry-run` first to see what it will do.
 
 - **New machine?** Add `hosts/$(hostname)/` first (monitors, GPU order). See `.claude/skills/new-machine`.
 - **SSH:** `.ssh/config` is gitignored. On first install it's seeded from `.ssh/config.example`, so fill in your own hosts.
-- **Wallpapers** live in `Pictures/wallpapers/` and are linked to `~/Pictures/wallpapers/`.
+- **Wallpapers** live in `Pictures/wallpapers/` and are linked to `~/Pictures/wallpapers/`. See the [wallpapers README](Pictures/wallpapers/README.md) for previews and how to switch them.
 - Nothing hardcodes a username or home path, so it works under any account.
 
 ## What's here
@@ -55,13 +88,21 @@ Run `./install.sh --dry-run` first to see what it will do.
 | Super+Enter | Ghostty |
 | Super+Space | Launcher (fuzzel) |
 | Alt+Space | vicinae |
-| Super+D / Super+N | Side panel / notifications |
-| Super+Alt+V | Clipboard history |
+| Super+D / Super+N | Side panel |
+| Super+Alt+V | Clipboard history (in vicinae) |
+| Super+1…5 | Go to workspace |
+| Super+Shift+1…5 | Move window to workspace |
+| Super+Shift+D | New workspace on this monitor |
+| Super+Shift+← / → | Previous / next workspace on this monitor |
+| Ctrl+Shift+M | Hide / show every window on this screen |
+| Super+Shift+M | Bring back the last minimized window |
 | Super+Shift+S / Print | Area screenshot to clipboard |
 | Shift+Print | Area screenshot to ~/Pictures/Screenshots |
 | Super+L | Lock |
-| Super+Q | Close window |
+| Super+Q | Close window (Spotify goes to the tray) |
 | Super+Shift+E | Power menu (also Super+Esc) |
+
+Titlebar buttons: red closes, yellow minimizes, green gives the window its own workspace (press again to return).
 
 **Ghostty**
 | Key | Action |
@@ -69,10 +110,11 @@ Run `./install.sh --dry-run` first to see what it will do.
 | Ctrl+T | New tab |
 | Ctrl+Shift+W | Close tab |
 | Ctrl+1…8 / Ctrl+9 | Go to tab / last tab |
-| Ctrl+Shift+← / → | Previous / next tab |
-| Ctrl+Shift+D / Ctrl+Alt+D | Split right / down |
+| Ctrl+Tab / Ctrl+Shift+Tab, Ctrl+Shift+← | Next / previous tab |
+| Ctrl+Shift+→ / Ctrl+Shift+↓ | Split right / down |
 | Ctrl+Alt+Arrows | Move between splits |
 | Ctrl+Shift+Enter | Zoom split |
+| Ctrl+V | Paste |
 | F11 | Fullscreen |
 
 Design spec: [docs/aura-tokens.md](docs/aura-tokens.md). Agent guide: [AGENTS.md](AGENTS.md). Credits: [docs/THIRD_PARTY.md](docs/THIRD_PARTY.md).

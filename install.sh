@@ -32,7 +32,7 @@ run mkdir -p "$HOME/.ssh"; run chmod 700 "$HOME/.ssh"
 run chmod 600 "$REPO/.ssh/config"   # ssh refuses group-writable configs; git doesn't keep modes
 link .ssh/config
 while IFS= read -r f; do link "${f#./}"; done < <(find ./.config -type f | sort)
-while IFS= read -r f; do link "${f#./}"; done < <(find ./Pictures -type f | sort)   # wallpapers used by hyprpaper/hyprlock
+while IFS= read -r f; do link "${f#./}"; done < <(find ./Pictures -type f ! -name README.md | sort)   # wallpapers used by hyprpaper/hyprlock
 while IFS= read -r f; do link "${f#./}"; done < <(find ./.local/share -type f | sort)   # app data: Vicinae theme
 
 # Per-host Hyprland settings (monitors, GPU order)
