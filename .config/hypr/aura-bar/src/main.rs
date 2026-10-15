@@ -1,6 +1,6 @@
 //! aura-bar: event-driven Waybar helpers for Hyprland (replaces per-second shell polling).
 //!
-//!   aura-bar dock <glyph> <class>[,<class>…]   long-running; reprints on Hyprland window events
+//!   aura-bar dock <glyph> <class>[,<class>…] <name>   long-running; reprints on Hyprland window events
 //!   aura-bar clock                             long-running; reprints on each minute boundary
 //!   aura-bar dnd                               prints once (Waybar re-runs it on SIGRTMIN+8)
 //!   aura-bar bsdate                            today's Bikram Sambat date, e.g. "२९ असोज २०८३"
@@ -41,31 +41,60 @@ fn emit(v: &Value) {
 
 // ---------------- dock ----------------
 
-fn dock_status(glyph: &str, classes: &[String], output: &str) -> Value {
+fn dock_status(glyph: &str, name: &str, classes: &[String], output: &str) -> Value {
     let mon = hypr_json("monitors")
         .as_array()
         .and_then(|ms| ms.iter().find(|m| m["name"] == output))
         .and_then(|m| m["id"].as_i64())
         .unwrap_or(-1);
     let matches = |c: &Value| classes.iter().any(|k| c["class"].as_str().is_some_and(|cl| cl.eq_ignore_ascii_case(k)));
-    let n = hypr_json("clients")
+    let on_monitor = |c: &Value| mon == -1 || c["monitor"].as_i64() == Some(mon);
+    let clients = hypr_json("clients")
         .as_array()
-        .map(|cs| {
-            cs.iter()
-                .filter(|c| matches(c))
-                // parked in a special workspace (minimized / closed-to-tray) = not open on screen
-                .filter(|c| !c["workspace"]["name"].as_str().is_some_and(|w| w.starts_with("special:")))
-                .filter(|c| mon == -1 || c["monitor"].as_i64() == Some(mon))
-                .count()
-        })
-        .unwrap_or(0);
-    let focused = matches(&hypr_json("activewindow"));
-    if n > 0 {
-        let class = if focused { json!(["running", "focused"]) } else { json!("running") };
-        json!({"text": glyph, "class": class, "tooltip": format!("{n} window(s)")})
-    } else {
-        json!({"text": glyph, "class": "idle"})
+        .cloned()
+        .unwrap_or_default();
+    let active_address = hypr_json("activewindow")["address"].as_str().map(str::to_owned);
+    let mut open_count = 0;
+    let mut minimized_count = 0;
+    let mut focused = false;
+
+    for client in clients.iter().filter(|c| matches(c) && on_monitor(c)) {
+        let workspace = client["workspace"]["name"].as_str().unwrap_or("");
+        if workspace == "special:minimized" {
+            minimized_count += 1;
+        } else if !workspace.starts_with("special:") {
+            open_count += 1;
+            focused |= active_address
+                .as_deref()
+                .is_some_and(|address| client["address"].as_str() == Some(address));
+        }
     }
+
+    let mut state = Vec::new();
+    if open_count > 0 {
+        state.push("running");
+        if focused {
+            state.push("focused");
+        }
+    } else if minimized_count > 0 {
+        state.push("minimized");
+    } else {
+        state.push("idle");
+    }
+    if minimized_count > 0 {
+        state.push("has-minimized");
+    }
+
+    let restore_hint = if open_count == 0 && minimized_count > 0 {
+        " · Click to restore"
+    } else {
+        ""
+    };
+    json!({
+        "text": glyph,
+        "class": state,
+        "tooltip": format!("{name} — {open_count} open, {minimized_count} minimized{restore_hint}")
+    })
 }
 
 /// Window lifecycle/placement events that can change a dock indicator.
@@ -74,27 +103,42 @@ fn relevant(event: &str) -> bool {
     matches!(name, "openwindow" | "closewindow" | "movewindow" | "movewindowv2" | "activewindowv2" | "monitoradded" | "monitorremoved")
 }
 
-fn dock(glyph: &str, classes: &str) {
+fn dock(glyph: &str, classes: &str, name: &str) {
     let classes: Vec<String> = classes.split(',').map(String::from).collect();
     // Waybar tells each module instance which output (monitor) its bar is on
     let output = std::env::var("WAYBAR_OUTPUT_NAME").unwrap_or_default();
-    let mut last = dock_status(glyph, &classes, &output);
-    emit(&last);
+    let mut last: Option<Value> = None;
     loop {
         let Ok(stream) = UnixStream::connect(format!("{}/.socket2.sock", hypr_dir())) else {
+            // Keep the indicator useful if Hyprland's event socket is not ready yet.
+            // Once connected, the next snapshot is taken after subscription and closes
+            // any gap between this fallback snapshot and the event stream.
+            if last.is_none() {
+                let now = dock_status(glyph, name, &classes, &output);
+                emit(&now);
+                last = Some(now);
+            }
             std::thread::sleep(Duration::from_secs(2));
             continue;
         };
-        for line in BufReader::new(stream).lines().map_while(Result::ok) {
+        // Subscribe first, then sample current state. Events that arrive during the
+        // queries remain queued on this stream and will trigger another refresh below.
+        let reader = BufReader::new(stream);
+        let now = dock_status(glyph, name, &classes, &output);
+        if last.as_ref() != Some(&now) {
+            emit(&now);
+            last = Some(now);
+        }
+        for line in reader.lines().map_while(Result::ok) {
             if !relevant(&line) {
                 continue;
             }
             // windows can be mid-teardown when the event fires; settle briefly before reading
             std::thread::sleep(Duration::from_millis(60));
-            let now = dock_status(glyph, &classes, &output);
-            if now != last {
+            let now = dock_status(glyph, name, &classes, &output);
+            if last.as_ref() != Some(&now) {
                 emit(&now);
-                last = now;
+                last = Some(now);
             }
         }
         std::thread::sleep(Duration::from_secs(1)); // Hyprland restarted: reconnect
@@ -228,7 +272,7 @@ fn main() {
     }
     let args: Vec<String> = std::env::args().skip(1).collect();
     match args.first().map(String::as_str) {
-        Some("dock") if args.len() == 3 => dock(&args[1], &args[2]),
+        Some("dock") if args.len() == 4 => dock(&args[1], &args[2], &args[3]),
         Some("clock") => clock(),
         Some("dnd") => dnd(),
         Some("bsdate") => println!("{}", bs_today()),
@@ -250,7 +294,7 @@ fn main() {
         }
         Some("lockdate") => println!("{}  ·  {}  ·  {}", strftime(&local_tm(), "%-d %B"), strftime(&local_tm(), "%A"), bs_today()),
         _ => {
-            eprintln!("usage: aura-bar dock <glyph> <class[,class…]> | clock | dnd | bsdate | lockdate");
+            eprintln!("usage: aura-bar dock <glyph> <class[,class…]> <name> | clock | dnd | bsdate | lockdate");
             std::process::exit(2);
         }
     }
