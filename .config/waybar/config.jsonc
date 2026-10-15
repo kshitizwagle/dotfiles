@@ -47,16 +47,16 @@
   "exclusive": true,
   "modules-center": ["custom/apps", "custom/files", "custom/browser", "custom/term", "custom/code", "custom/spotify", "wlr/taskbar"],
   "custom/apps": { "format": "󰀻", "tooltip-format": "Apps", "on-click": "vicinae toggle" },
-  "custom/files": { "exec": "~/.local/bin/aura-bar dock 󰉋 org.gnome.Nautilus", "return-type": "json", "tooltip-format": "Files", "on-click": "~/.config/hypr/scripts/dock.sh open '^org\\.gnome\\.Nautilus$' nautilus", "on-click-middle": "nautilus" },
-  "custom/browser": { "exec": "~/.local/bin/aura-bar dock 󰊯 google-chrome", "return-type": "json", "tooltip-format": "Chrome", "on-click": "~/.config/hypr/scripts/dock.sh open '^google-chrome$' gtk-launch google-chrome.desktop", "on-click-middle": "gtk-launch google-chrome.desktop" },
-  "custom/term": { "exec": "~/.local/bin/aura-bar dock 󰆍 com.mitchellh.ghostty", "return-type": "json", "tooltip-format": "Ghostty", "on-click": "~/.config/hypr/scripts/dock.sh open '^com\\.mitchellh\\.ghostty$' ghostty", "on-click-middle": "ghostty" },
-  "custom/spotify": { "exec": "~/.local/bin/aura-bar dock 󰓇 Spotify", "return-type": "json", "tooltip-format": "Spotify", "on-click": "~/.config/hypr/scripts/dock.sh open '^Spotify$' spotify", "on-click-middle": "spotify" },
-  "custom/code": { "exec": "~/.local/bin/aura-bar dock 󰨞 code,code-url-handler,com.microsoft.VSCode", "return-type": "json", "tooltip-format": "VS Code", "on-click": "~/.config/hypr/scripts/dock.sh open '^(code|code-url-handler|com\\.microsoft\\.VSCode)$' gtk-launch com.microsoft.VSCode.desktop", "on-click-middle": "gtk-launch com.microsoft.VSCode.desktop" },
+  "custom/files": { "exec": "~/.local/bin/aura-bar dock 󰉋 org.gnome.Nautilus Files", "return-type": "json", "on-click": "~/.config/hypr/scripts/dock.sh open '^org\\.gnome\\.Nautilus$' nautilus", "on-click-middle": "nautilus" },
+  "custom/browser": { "exec": "~/.local/bin/aura-bar dock 󰊯 google-chrome Chrome", "return-type": "json", "on-click": "~/.config/hypr/scripts/dock.sh open '^google-chrome$' gtk-launch google-chrome.desktop", "on-click-middle": "gtk-launch google-chrome.desktop" },
+  "custom/term": { "exec": "~/.local/bin/aura-bar dock 󰆍 com.mitchellh.ghostty Ghostty", "return-type": "json", "on-click": "~/.config/hypr/scripts/dock.sh open '^com\\.mitchellh\\.ghostty$' ghostty", "on-click-middle": "ghostty" },
+  "custom/spotify": { "exec": "~/.local/bin/aura-bar dock 󰓇 Spotify Spotify", "return-type": "json", "on-click": "~/.config/hypr/scripts/dock.sh open '^Spotify$' spotify", "on-click-middle": "spotify" },
+  "custom/code": { "exec": "~/.local/bin/aura-bar dock 󰨞 code,code-url-handler,com.microsoft.VSCode 'VS Code'", "return-type": "json", "on-click": "~/.config/hypr/scripts/dock.sh open '^(code|code-url-handler|com\\.microsoft\\.VSCode)$' gtk-launch com.microsoft.VSCode.desktop", "on-click-middle": "gtk-launch com.microsoft.VSCode.desktop" },
   "wlr/taskbar": {
     "format": "{icon}", "icon-size": 28, "icon-theme": "WhiteSur-dark",
     "tooltip-format": "{title}", "on-click": "activate", "on-click-middle": "close",
     "all-outputs": false,
-    "ignore-list": ["google-chrome", "org.gnome.Nautilus", "com.mitchellh.ghostty", "code", "com.microsoft.VSCode", "Spotify", "spotify"]
+    "ignore-list": ["google-chrome", "org.gnome.Nautilus", "com.mitchellh.ghostty", "code", "code-url-handler", "com.microsoft.VSCode", "Spotify", "spotify"]
   }
 }
 ]
