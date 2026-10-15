@@ -7,6 +7,6 @@ if [ "${1:-}" = bar ]; then addr=$(~/.config/hypr/scripts/bar-window.sh); else a
 [ -n "$addr" ] || exit 0
 class=$(hyprctl clients -j | jq -r --arg a "$addr" '.[] | select(.address == $a) | .class')
 case "${class,,}" in
-  spotify) hyprctl dispatch movetoworkspacesilent "special:minimized,address:$addr" ;;
+  spotify) exec ~/.config/hypr/scripts/minimize.sh "$addr" ;;
   *) hyprctl dispatch closewindow "address:$addr" ;;
 esac
