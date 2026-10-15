@@ -193,9 +193,11 @@ fn clock() {
     loop {
         let tm = local_tm();
         let bs = bs_today();
+        // English date · weekday · Nepali (BS) date, then the time
         let text = format!(
-            "<span color='#908f98'>{}</span>  <span color='#3d375e'>·</span>  <span color='#a277ff'>{bs}</span>   <b>{}</b>",
-            strftime(&tm, "%a %-d %b %Y"),
+            "<span color='#908f98'>{}</span>  <span color='#6d6d6d'>·</span>  <span color='#edecee'>{}</span>  <span color='#6d6d6d'>·</span>  <span color='#a277ff'>{bs}</span>   <b>{}</b>",
+            strftime(&tm, "%-d %b %Y"),
+            strftime(&tm, "%A"),
             strftime(&tm, "%H:%M")
         );
         emit(&json!({"text": text, "tooltip": format!("{} · {bs}", strftime(&tm, "%A, %-d %B %Y"))}));
@@ -246,7 +248,7 @@ fn main() {
                 }
             }
         }
-        Some("lockdate") => println!("{}  ·  {}", strftime(&local_tm(), "%A, %-d %B"), bs_today()),
+        Some("lockdate") => println!("{}  ·  {}  ·  {}", strftime(&local_tm(), "%-d %B"), strftime(&local_tm(), "%A"), bs_today()),
         _ => {
             eprintln!("usage: aura-bar dock <glyph> <class[,class…]> | clock | dnd | bsdate | lockdate");
             std::process::exit(2);
