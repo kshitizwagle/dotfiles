@@ -12,7 +12,7 @@ Personal dotfiles for Ubuntu 26.04 + GNOME 50 (daily driver) with an optional Hy
 
 | Path | Purpose |
 |---|---|
-| `.zshrc`, `.config/**`, `Pictures/**` | Linked into `$HOME` by `install.sh` (every file under `.config` and `Pictures` is picked up automatically). Use `~` or relative paths, never `/home/<user>` |
+| `.zshrc`, `.config/**`, `Pictures/**`, `.local/share/**` | Linked into `$HOME` by `install.sh` (every file under `.config`, `Pictures` and `.local/share` is picked up automatically; `.local/share` holds app data such as the Vicinae theme). Use `~` or relative paths, never `/home/<user>` |
 | `hosts/<hostname>/` | Machine-specific: `hypr-host.conf` (monitors, GPU env), `gpus` (DRM device symlinks) |
 | `gnome/dconf/*.ini` | GNOME settings subset, applied by `scripts/gnome.sh` |
 | `gnome/extensions-enabled.txt` | Enabled GNOME Shell extensions |

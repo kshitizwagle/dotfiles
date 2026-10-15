@@ -1,0 +1,59 @@
+# Aura Dark — matches the panel, bar and lock screen (docs/aura-tokens.md)
+[meta]
+name = "Aura Dark"
+description = "Aura Dark: #15141b surfaces, #a277ff accent"
+variant = "dark"
+inherits = "vicinae-dark"
+
+[colors.core]
+accent = "#a277ff"
+accent_foreground = "#15141b"
+background = "#15141b"
+foreground = "#edecee"
+secondary_background = "#1d1c25"
+border = "#2e2c3a"
+
+[colors.main_window]
+border = "#2e2c3a"
+
+[colors.settings_window]
+border = "#2e2c3a"
+
+[colors.accents]
+green = "#61ffca"
+red = "#ff6767"
+yellow = "#ffca85"
+cyan = "#82e2ff"
+purple = "#a277ff"
+magenta = "#f694ff"
+
+[colors.text]
+muted = "#908f98"
+placeholder = "#6d6d6d"
+danger = "#ff6767"
+success = "#61ffca"
+selection = { background = "#a277ff", foreground = "#15141b" }
+
+[colors.input]
+border = "#2e2c3a"
+border_focus = "#a277ff"
+border_error = "#ff6767"
+
+[colors.button.primary]
+background = "#29263c"
+foreground = "#edecee"
+
+[colors.list.item.hover]
+foreground = "#edecee"
+secondary_foreground = "#edecee"
+
+[colors.list.item.selection]
+background = "#3d375e"
+foreground = "#edecee"
+secondary_background = "#3d375e"
+secondary_foreground = "#edecee"
+
+[colors.grid.item]
+background = "#1d1c25"
+hover = { outline = "#a277ff" }
+selection = { outline = "#a277ff" }

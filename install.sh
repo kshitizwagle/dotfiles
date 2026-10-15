@@ -24,7 +24,7 @@ link() {  # link <repo-relative path>
   echo "linked   ~/$1"
 }
 
-# Every managed file: .zshrc, .ssh/config, everything under .config and Pictures. (.zshenv is macOS-only.)
+# Every managed file: .zshrc, .ssh/config, everything under .config, Pictures and .local/share. (.zshenv is macOS-only.)
 link .zshrc
 run mkdir -p "$HOME/.ssh"; run chmod 700 "$HOME/.ssh"
 # .ssh/config is gitignored (it names private hosts); seed it from the example on a fresh clone
@@ -33,6 +33,7 @@ run chmod 600 "$REPO/.ssh/config"   # ssh refuses group-writable configs; git do
 link .ssh/config
 while IFS= read -r f; do link "${f#./}"; done < <(find ./.config -type f | sort)
 while IFS= read -r f; do link "${f#./}"; done < <(find ./Pictures -type f | sort)   # wallpapers used by hyprpaper/hyprlock
+while IFS= read -r f; do link "${f#./}"; done < <(find ./.local/share -type f | sort)   # app data: Vicinae theme
 
 # Per-host Hyprland settings (monitors, GPU order)
 HOSTDIR="$REPO/hosts/$HOST"
