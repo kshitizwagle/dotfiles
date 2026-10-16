@@ -136,7 +136,7 @@ pub struct Connections {
     pub widget: gtk::Box,
     pub net_card: gtk::Box,
     pub bt_card: gtk::Box,
-    pub audio_card: gtk::Box,
+    audio_card: gtk::Box,
     open: RefCell<Option<&'static str>>,
     animate: RefCell<Option<&'static str>>, // section the user just opened (animate once)
     state: RefCell<State>,
@@ -157,6 +157,7 @@ impl Connections {
         });
         c.widget.append(&c.net_card);
         c.widget.append(&c.bt_card);
+        c.widget.append(&c.audio_card);
         c.refresh();
         let weak = Rc::downgrade(&c);
         glib::timeout_add_seconds_local(5, move || {

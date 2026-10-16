@@ -1,5 +1,6 @@
-//! aura-panel: Hyprland home-screen dashboard (desktop cards on the bottom layer) plus a
-//! controls sidebar (Super+D). GTK4 + gtk4-layer-shell, Aura palette.
+//! aura-panel: Hyprland home screen (a calendar card on the bottom layer) plus a full-screen
+//! overlay (Super+D): the dashboard cards (media, system, Docker, actions, folders, lights)
+//! across the page and the controls column on the right. GTK4 + gtk4-layer-shell, Aura palette.
 //!
 //! Super+D sends SIGUSR1 (see toggle.sh). The handler is installed before any UI is built, and
 //! `--raised` starts the panel already showing, so a toggle can never be lost during startup.
@@ -208,7 +209,8 @@ struct Panel {
     desk: gtk::Window,
     side: gtk::Window,
     raised: Cell<bool>,
-    columns: Vec<gtk::Box>,
+    columns: Vec<gtk::Box>, // home-screen columns (just the calendar)
+    side_cols: (i32, i32), // overlay card columns: Docker column width, other columns (0 = one column)
     // system
     sys_rows: RefCell<Vec<(SysRow, gtk::LevelBar, gtk::Label, gtk::Label, gtk::Label)>>,
     cpu_prev: Cell<(u64, u64)>,
@@ -255,7 +257,6 @@ struct Panel {
     monitor_names: RefCell<Vec<String>>,
     connections: RefCell<Option<Rc<Connections>>>,
     catchers: RefCell<Vec<gtk::Window>>,
-    cal_win: gtk::Window,
     cal: Rc<calendar::Calendar>,
 }
 
@@ -310,11 +311,15 @@ impl Panel {
             desk.set_monitor(Some(m));
         }
         let width = mon.as_ref().map(|m| m.geometry().width()).unwrap_or(1920);
-        let wide = width >= 1500;
-        let avail = width - 16 - 28 - 24;
-        let col_w = if wide { (avail as f64 * 0.24) as i32 } else { (avail - 12) / 2 };
-        let docker_w = if wide { avail - 2 * col_w } else { col_w };
-        let per_line = if docker_w >= 900 { 3 } else if docker_w >= 560 { 2 } else { 1 };
+        // overlay: 400px controls on the right; the rest holds three card columns on big screens
+        let rest = width - 16 - 3 * 12 - 400;
+        let side_cols = if width >= 1500 {
+            let c = (rest as f64 * 0.30) as i32; // 1920: Docker 588 (two stacks per line), others 440
+            (rest - 2 * c, c)
+        } else {
+            (rest, 0)
+        };
+        let per_line = if side_cols.0 >= 900 { 3 } else if side_cols.0 >= 560 { 2 } else { 1 };
 
         let root = hbox(12);
         root.add_css_class("desktop-widgets");
@@ -323,15 +328,10 @@ impl Panel {
         root.set_margin_top(38); // clear the top bar
         root.set_margin_bottom(64); // clear the dock
         root.set_valign(gtk::Align::Start);
-        let columns: Vec<gtk::Box> = [docker_w, col_w, col_w]
-            .iter()
-            .map(|w| {
-                let c = gtk::Box::new(gtk::Orientation::Vertical, 12);
-                c.set_size_request(*w, -1);
-                root.append(&c);
-                c
-            })
-            .collect();
+        root.set_halign(gtk::Align::Start);
+        let col = gtk::Box::new(gtk::Orientation::Vertical, 12);
+        root.append(&col);
+        let columns = vec![col];
         desk.set_child(Some(&root));
 
         // ---- controls sidebar (overlay, right edge), Super+D ----
@@ -355,6 +355,7 @@ impl Panel {
             side,
             raised: Cell::new(false),
             columns,
+            side_cols,
             sys_rows: RefCell::new(vec![]),
             cpu_prev: Cell::new((0, 0)),
             docker_summary: rlabel("loading…", &["dim"]),
@@ -396,7 +397,6 @@ impl Panel {
             monitor_names: RefCell::new(vec![]),
             connections: RefCell::new(None),
             catchers: RefCell::new(vec![]),
-            cal_win: layer_window("calendar", Layer::Overlay, KeyboardMode::OnDemand),
             cal: calendar::Calendar::new(),
         });
         p.assemble();
@@ -413,23 +413,38 @@ impl Panel {
         let conns = Connections::new(move || me.close());
         *self.connections.borrow_mut() = Some(conns.clone());
 
-        let docker = self.build_docker();
-        let media = self.build_media();
-        let actions = self.build_actions();
-        let folders = self.build_folders();
-        let system = self.build_system();
-        let lights = self.build_lights();
-        for (col, cards) in self.columns.iter().zip([
-            vec![docker, media],
-            vec![actions, folders],
-            vec![system, lights, conns.audio_card.clone()],
-        ]) {
+        // home screen: just the calendar
+        self.columns[0].append(&self.cal.widget);
+
+        // overlay, left of the controls: the dashboard cards straight on the dimmed backdrop
+        let cardrow = hbox(12);
+        cardrow.set_margin_start(8);
+        cardrow.set_margin_top(8);
+        cardrow.set_margin_bottom(16);
+        cardrow.set_valign(gtk::Align::Start);
+        let (docker_w, col_w) = self.side_cols;
+        let groups = if col_w > 0 {
+            vec![(docker_w, vec![self.build_docker(), self.build_media()]),
+                (col_w, vec![self.build_system()]),
+                (col_w, vec![self.build_actions(), self.build_folders(), self.build_lights()])]
+        } else {
+            vec![(docker_w, vec![self.build_media(), self.build_system(), self.build_docker(),
+                self.build_actions(), self.build_folders(), self.build_lights()])]
+        };
+        for (w, cards) in groups {
+            let col = gtk::Box::new(gtk::Orientation::Vertical, 12);
+            col.set_size_request(w, -1);
             for c in cards {
                 col.append(&c);
             }
+            cardrow.append(&col);
         }
+        let cards_scroll = gtk::ScrolledWindow::new();
+        cards_scroll.set_hscrollbar_policy(gtk::PolicyType::Never);
+        cards_scroll.set_hexpand(true);
+        cards_scroll.set_child(Some(&cardrow));
 
-        // sidebar
+        // sidebar, right column: controls
         let sidebox = gtk::Box::new(gtk::Orientation::Vertical, 12);
         sidebox.add_css_class("panel");
         sidebox.set_size_request(380, -1);
@@ -448,8 +463,10 @@ impl Panel {
         let scroll = gtk::ScrolledWindow::new();
         scroll.set_hscrollbar_policy(gtk::PolicyType::Never);
         scroll.set_child(Some(&sidebox));
-        scroll.set_halign(gtk::Align::End);
         scroll.set_size_request(400, -1);
+        let columns = hbox(12);
+        columns.append(&cards_scroll);
+        columns.append(&scroll);
         let outside = gtk::Box::new(gtk::Orientation::Vertical, 0);
         outside.add_css_class("backdrop");
         outside.add_css_class("raised"); // dimmed; Hyprland blurs behind it (rules.conf)
@@ -459,7 +476,7 @@ impl Panel {
         on_click(&outside, move || me.close());
         let overlay = gtk::Overlay::new();
         overlay.set_child(Some(&outside));
-        overlay.add_overlay(&scroll);
+        overlay.add_overlay(&columns);
         self.side.set_child(Some(&overlay));
         // Keyboard: only Esc does anything here. Every other key (Tab, arrows, Enter, Space…) is
         // swallowed in the capture phase, and nothing in the sidebar can take keyboard focus.
@@ -477,51 +494,10 @@ impl Panel {
             glib::Propagation::Stop
         });
         self.side.add_controller(keys);
-        self.build_calendar();
         unfocusable(overlay.upcast_ref());
     }
 
     // ---------------- sections ----------------
-    /// Month calendar under the top-bar clock; Esc or a click outside closes it.
-    fn build_calendar(self: &Rc<Self>) {
-        self.cal_win.set_exclusive_zone(0); // below the top bar
-        let outside = gtk::Box::new(gtk::Orientation::Vertical, 0);
-        outside.set_hexpand(true);
-        outside.set_vexpand(true);
-        let overlay = gtk::Overlay::new();
-        overlay.set_child(Some(&outside));
-        self.cal.widget.set_halign(gtk::Align::End);
-        self.cal.widget.set_valign(gtk::Align::Start);
-        self.cal.widget.set_margin_top(8);
-        self.cal.widget.set_margin_end(8);
-        overlay.add_overlay(&self.cal.widget);
-        self.cal_win.set_child(Some(&overlay));
-        let me = self.clone();
-        on_click(&outside, move || me.cal_win.set_visible(false));
-        let keys = gtk::EventControllerKey::new();
-        let me = self.clone();
-        keys.connect_key_pressed(move |_, k, _, _| {
-            if k == gdk::Key::Escape {
-                me.cal_win.set_visible(false);
-                return glib::Propagation::Stop;
-            }
-            glib::Propagation::Proceed
-        });
-        self.cal_win.add_controller(keys);
-    }
-
-    fn toggle_calendar(self: &Rc<Self>) {
-        if self.cal_win.is_visible() {
-            self.cal_win.set_visible(false);
-        } else {
-            if let Some(m) = focused_monitor() {
-                self.cal_win.set_monitor(Some(&m));
-            }
-            self.cal.reset();
-            self.cal_win.present();
-        }
-    }
-
     fn build_power(self: &Rc<Self>) -> gtk::Box {
         let power = hbox(0);
         power.add_css_class("card");
@@ -958,11 +934,7 @@ impl Panel {
         }
         *self.docker_metrics.borrow_mut() = m;
         c.append(&metrics);
-        let inner = gtk::ScrolledWindow::new();
-        inner.set_hscrollbar_policy(gtk::PolicyType::Never);
-        inner.set_propagate_natural_height(true); // Docker takes only the height it needs
-        inner.set_child(Some(&self.docker_list));
-        c.append(&inner);
+        c.append(&self.docker_list); // the sidebar column scrolls, so no inner scroller
         c
     }
 
@@ -1143,6 +1115,13 @@ impl Panel {
         self.refresh_remote();
         self.refresh_media();
         self.refresh_dnd();
+        // the home-screen calendar stays up for days: move "today" at midnight
+        let weak = Rc::downgrade(self);
+        glib::timeout_add_seconds_local(60, move || {
+            let Some(p) = weak.upgrade() else { return glib::ControlFlow::Break };
+            p.cal.roll_day();
+            glib::ControlFlow::Continue
+        });
         for (secs, f) in [
             (2u32, Panel::refresh_system as fn(&Rc<Panel>)),
             (2, Panel::refresh_media),
@@ -1665,19 +1644,13 @@ extern "C" fn on_sigusr1(_: libc::c_int) {
     TOGGLES.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
 }
 
-/// SIGUSR2 (top-bar clock click) toggles the calendar.
-static CAL_TOGGLES: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
-
-extern "C" fn on_sigusr2(_: libc::c_int) {
-    CAL_TOGGLES.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
-}
-
 fn main() {
     // Install the Super+D handler before anything else, so a toggle during startup is never lost
     // (SIGUSR1's default action would kill the process).
     unsafe {
         libc::signal(libc::SIGUSR1, on_sigusr1 as *const () as libc::sighandler_t);
-        libc::signal(libc::SIGUSR2, on_sigusr2 as *const () as libc::sighandler_t);
+        // SIGUSR2 used to toggle the clock's calendar popover; ignore it so a stale sender can't kill us
+        libc::signal(libc::SIGUSR2, libc::SIG_IGN);
     }
     let raise = std::env::args().any(|a| a == "--raised");
     gtk::init().expect("GTK init");
@@ -1688,9 +1661,6 @@ fn main() {
         let n = TOGGLES.swap(0, std::sync::atomic::Ordering::SeqCst);
         if n % 2 == 1 {
             p2.peek();
-        }
-        if CAL_TOGGLES.swap(0, std::sync::atomic::Ordering::SeqCst) % 2 == 1 {
-            p2.toggle_calendar();
         }
         glib::ControlFlow::Continue
     });

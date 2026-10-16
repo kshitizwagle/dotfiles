@@ -1,4 +1,4 @@
-//! Month calendar popover (top bar clock): Gregorian and Bikram Sambat (Nepali) month grids,
+//! Month calendar card (home screen): Gregorian and Bikram Sambat (Nepali) month grids,
 //! prev/next navigation, today highlighted, and the other calendar's day under every date.
 //! The BS table is the same one aura-bar uses (verified against nepali-datetime for 1975–2100 BS).
 use gtk::prelude::*;
@@ -94,6 +94,7 @@ fn today_days() -> i64 {
 pub struct Calendar {
     pub widget: gtk::Box,
     nepali: Cell<bool>,
+    shown_today: Cell<i64>, // day number "today" was last drawn for
     // month shown: AD (year, month 1-12) and BS (year, month index 0-11)
     ad: Cell<(i64, i64)>,
     bs: Cell<(i64, usize)>,
@@ -106,7 +107,7 @@ pub struct Calendar {
 impl Calendar {
     pub fn new() -> Rc<Self> {
         let widget = gtk::Box::new(gtk::Orientation::Vertical, 10);
-        widget.add_css_class("panel");
+        widget.add_css_class("card");
         widget.add_css_class("calendar");
         widget.set_size_request(380, -1);
         let mode_ad = gtk::ToggleButton::with_label("Gregorian");
@@ -119,6 +120,7 @@ impl Calendar {
         let c = Rc::new(Self {
             widget,
             nepali: Cell::new(false),
+            shown_today: Cell::new(0),
             ad: Cell::new((0, 0)),
             bs: Cell::new((0, 0)),
             title: gtk::Label::new(None),
@@ -169,15 +171,23 @@ impl Calendar {
         c
     }
 
-    /// Jump to the current month (called each time the popover opens).
+    /// Jump to the current month.
     pub fn reset(&self) {
         let t = today_days();
+        self.shown_today.set(t);
         let (y, m, _) = civil_from_days(t);
         self.ad.set((y, m));
         if let Some((by, bm, _)) = bs_from_days(t) {
             self.bs.set((by, bm));
         }
         self.render();
+    }
+
+    /// Called every minute: after midnight, jump to the new day's month so "today" moves.
+    pub fn roll_day(&self) {
+        if today_days() != self.shown_today.get() {
+            self.reset();
+        }
     }
 
     fn step(&self, delta: i64) {

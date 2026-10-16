@@ -204,7 +204,7 @@ switch slider { transition: transform 160ms cubic-bezier(0.23, 1, 0.32, 1); }
 .dnd-btn.on { background-color: #a277ff; }
 .dnd-btn.on label { color: #15141b; }
 
-/* Calendar popover (top bar clock) */
+/* Calendar card (home screen) */
 .calendar { padding: 14px; }
 .cal-modes { background-color: #15141b; border-radius: 10px; padding: 3px; }
 .cal-mode { background: transparent; padding: 4px 10px; border-radius: 8px; }
@@ -225,7 +225,6 @@ switch slider { transition: transform 160ms cubic-bezier(0.23, 1, 0.32, 1); }
 
 /* System "bucket" tiles: the overlay draws the background + fill, the content sits on top */
 .metric-content { background: transparent; padding: 0; }
-.calendar { background-color: #1d1c25; border: 1px solid #2e2c3a; }
 
 /* CPU / GPU model under the tile title */
 .metric-name { color: #edecee; font-size: 11px; opacity: 0.75; }
