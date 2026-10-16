@@ -4,20 +4,22 @@ Ubuntu 26.04 · GNOME 50 + Hyprland 0.53 · **Aura Dark**
 
 ![Desktop](docs/screenshots/desktop.jpg)
 
-The home screen: aura-panel's cards on the desktop layer (they sit under windows), the aura-bar dock, and the top bar with the English · weekday · Nepali date.
+The home screen: aura-panel's calendar card on the desktop layer (it sits under windows), the Waybar dock at the bottom, and the Waybar top bar with the minimized-window stash and the English · weekday · Nepali date. The dock tiles, clock and stash are drawn by `aura-bar`, a small Rust helper behind those Waybar modules.
 
-## Side panel
+## Dashboard
 
-**aura-panel** (Super+D): power with confirmation, primary monitor, Ethernet / Wi-Fi / Bluetooth,
-notification history and Do Not Disturb. The same panel's home-screen cards (Docker stacks, now playing
-with a seekable spectrum bar, live CPU / memory / GPU / disk graphs, lights, sound) sit on the desktop.
+**aura-panel** (Super+D): a full-screen overlay over the dimmed desktop. The cards fill the page (Docker stacks,
+now playing with a seekable spectrum bar, live CPU / memory / GPU / disk graphs, quick actions, folders, lights),
+and the controls column on the right has power with confirmation, primary monitor, Ethernet / Wi-Fi / Bluetooth,
+sound (volume, output and input device), notification history and Do Not Disturb.
 
-![Side panel](docs/screenshots/panel.jpg)
+![Dashboard](docs/screenshots/panel.jpg)
 
 ## Calendar
 
-Click the top-bar clock: a month view in **Gregorian** or **नेपाली** (Bikram Sambat) with the other
+A card on the home screen: a month view in **Gregorian** or **नेपाली** (Bikram Sambat) with the other
 calendar's day under each date, previous/next month, Today, and Saturdays (Nepal's weekly holiday) in red.
+"Today" moves on its own at midnight.
 
 ![Calendar](docs/screenshots/calendar.jpg)
 
@@ -36,7 +38,7 @@ Update with `scripts/update-vicinae.sh` — it runs the official installer when 
 
 ## Power menu
 
-**wlogout** (Super+Esc): a 2 × 2 grid of Aura cards over the blurred wallpaper.
+**wlogout** (Super+Esc or Super+Shift+E): a 2 × 2 grid of Aura cards over the dimmed desktop.
 
 ![Power menu](docs/screenshots/powermenu.jpg)
 
@@ -57,7 +59,7 @@ scripts/gnome.sh         # GNOME settings + extensions
 scripts/gdm-theme.sh     # Aura login screen (sudo)
 scripts/refind-theme.sh  # rEFInd config + Aura boot theme (sudo)
 
-# Hyprland bar and side panel (Rust)
+# Hyprland bar helper and side panel (Rust)
 cargo install --path .config/hypr/aura-bar   --root ~/.local
 cargo install --path .config/hypr/aura-panel --root ~/.local
 ```
@@ -77,8 +79,8 @@ Run `./install.sh --dry-run` first to see what it will do.
 | Shell | zsh + oh-my-zsh, starship prompt |
 | Editor | Neovim with the official Aura port |
 | GNOME | libadwaita recolored with CSS variables (no forced theme), Papirus-Dark, autohide dock |
-| Hyprland | 1px accent borders, 6px radius, no window blur, aura-bar dock, aura-panel sidebar, vicinae, hyprlock/hypridle, wlogout |
-| Login | Aura GDM theme built on Ubuntu's Yaru |
+| Hyprland | 1px accent borders, 6px radius, no window blur, Waybar top bar + dock (aura-bar modules), aura-panel dashboard + home-screen calendar, mako notifications, vicinae, hyprlock/hypridle, wlogout |
+| Login | Aura GDM theme built on Ubuntu's Yaru (`scripts/gdm-theme.sh`; it also undoes a WhiteSur overwrite of Yaru) |
 | Boot | rEFInd with a custom Aura theme |
 
 ## Keys
@@ -89,7 +91,7 @@ Run `./install.sh --dry-run` first to see what it will do.
 | Super+Enter | Ghostty |
 | Super+Space | Launcher (fuzzel) |
 | Alt+Space | vicinae |
-| Super+D / Super+N | Side panel |
+| Super+D / Super+N | Dashboard |
 | Super+Alt+V | Clipboard history (in vicinae) |
 | Super+1…5 | Go to workspace |
 | Super+Shift+1…5 | Move window to workspace |
