@@ -53,7 +53,7 @@ from `~/.face` (`.config/hypr/scripts/set-avatar.sh <picture>`), falling back to
 
 ```bash
 git clone https://github.com/kshitizwagle/dotfiles.git ~/dotfiles && cd ~/dotfiles
-scripts/packages.sh      # apt packages + BlexMono Nerd Font (sudo)
+scripts/packages.sh      # apt / pacman / nix packages + BlexMono Nerd Font (sudo; --nix forces a nix profile)
 ./install.sh             # symlink configs into $HOME (backs up existing files)
 scripts/gnome.sh         # GNOME settings + extensions
 scripts/gdm-theme.sh     # Aura login screen (sudo)

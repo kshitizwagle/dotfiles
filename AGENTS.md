@@ -4,7 +4,7 @@ Guide for AI agents (Claude Code, Codex, etc.) working in this dotfiles repo.
 
 ## What this repo is
 
-Personal dotfiles for Ubuntu 26.04 + GNOME 50 (daily driver) with an optional Hyprland 0.53 session, themed **Aura Dark**. The repo root mirrors `$HOME`: `./.config/ghostty/config.ghostty` is linked to `~/.config/ghostty/config.ghostty`.
+Personal dotfiles for GNOME (daily driver; Ubuntu 26.04 / GNOME 50 originally, now also Arch/CachyOS, with package support for NixOS) with an optional Hyprland 0.53 session, themed **Aura Dark**. The repo root mirrors `$HOME`: `./.config/ghostty/config.ghostty` is linked to `~/.config/ghostty/config.ghostty`.
 
 `.zshenv` is macOS-only and `install.sh` never links it. `.ssh/config` is linked but gitignored (it names private hosts); the tracked `.ssh/config.example` is a sanitized copy that `install.sh` seeds it from. It holds host aliases and key **paths** only, and keys themselves must never be committed (see `.gitignore`).
 
@@ -17,7 +17,7 @@ Personal dotfiles for Ubuntu 26.04 + GNOME 50 (daily driver) with an optional Hy
 | `gnome/dconf/*.ini` | GNOME settings subset, applied by `scripts/gnome.sh` |
 | `gnome/extensions-enabled.txt` | Enabled GNOME Shell extensions |
 | `gnome/gdm/aura-overrides.css` | Login-screen CSS appended to Ubuntu's Yaru GDM theme by `scripts/gdm-theme.sh` |
-| `scripts/packages.sh` | apt packages + BlexMono Nerd Font |
+| `scripts/packages.sh` | Packages via apt (Debian/Ubuntu), pacman (Arch/CachyOS) or a nix profile (NixOS, or `--nix` anywhere), + BlexMono Nerd Font |
 | `refind/refind.conf`, `refind/themes/aura/` | rEFInd config and boot theme; `scripts/refind-theme.sh` installs both to the ESP (sudo) |
 | `docs/aura-tokens.md` | The design spec. **Source of truth for every color, radius and timing** |
 | `docs/PLAN.md` | Original audit + rollout plan, with the reasoning behind decisions |
@@ -25,7 +25,7 @@ Personal dotfiles for Ubuntu 26.04 + GNOME 50 (daily driver) with an optional Hy
 
 ## Rules
 
-1. **Read-only first.** Audit with commands before changing anything. Never assume versions: check `gnome-shell --version`, `Hyprland --version`, `apt-cache policy <pkg>`.
+1. **Read-only first.** Audit with commands before changing anything. Never assume versions: check `gnome-shell --version`, `Hyprland --version`, `apt-cache policy <pkg>` / `pacman -Si <pkg>`.
 2. **Follow the spec** in `docs/aura-tokens.md`: one saturated accent (`#a277ff`), purple-tinted neutrals, 1px borders before shadows, 6px radius, no window blur (blur only on the bar, panel and notifications), short non-bouncy motion. If a popular rice choice conflicts with the spec, follow the spec and say what you rejected.
 3. **Prefer official Aura ports** (github.com/daltonmenezes/aura-theme `packages/`) over hand-mapping.
 4. **Every change must be reversible.** Back up before overwriting (`dconf dump`, copy to `~/.dotfiles-backup/`), and give a rollback command.
