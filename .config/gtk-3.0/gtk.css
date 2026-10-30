@@ -1,8 +1,25 @@
-/* Aura Dark — Adwaita-dark color overrides */
+/* Aura Dark — GTK3 color overrides (adw-gtk3-dark names, mirrors gtk-4.0/gtk.css) */
+@define-color accent_bg_color #a277ff;
+@define-color accent_color #a277ff;
+@define-color accent_fg_color #15141b;
+@define-color window_bg_color #15141b;
+@define-color window_fg_color #edecee;
+@define-color view_bg_color #15141b;
+@define-color view_fg_color #edecee;
+@define-color headerbar_bg_color #0f0e14;
+@define-color headerbar_fg_color #edecee;
+@define-color headerbar_backdrop_color #15141b;
+@define-color sidebar_bg_color #0f0e14;
+@define-color sidebar_backdrop_color #15141b;
+@define-color card_bg_color #1d1c25;
+@define-color popover_bg_color #25242f;
+@define-color dialog_bg_color #1d1c25;
+@define-color borders #2e2c3a;
+
+/* Plain Adwaita-dark reads these directly */
 @define-color theme_bg_color #15141b;
 @define-color theme_base_color #15141b;
 @define-color theme_fg_color #edecee;
 @define-color theme_text_color #edecee;
 @define-color theme_selected_bg_color #a277ff;
 @define-color theme_selected_fg_color #15141b;
-@define-color borders #2e2c3a;

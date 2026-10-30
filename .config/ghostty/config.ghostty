@@ -1,4 +1,4 @@
-theme = aura-gnome
+theme = Aura
 font-family = BlexMono Nerd Font Mono
 font-size = 11
 window-padding-x = 12
@@ -43,5 +43,4 @@ keybind = f11=toggle_fullscreen
 # Misc
 keybind = ctrl+shift+k=clear_screen
 keybind = ctrl+comma=open_config
-window-decoration = none
 keybind = ctrl+v=paste_from_clipboard
